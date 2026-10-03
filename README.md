@@ -1,9 +1,9 @@
 # System wspomagania decyzji diagnostycznych oparty na regułach eksperckich i danych pacjentów
 
-> Praca inżynierska — Piotr Gorzkiewicz  
+> Praca inżynierska - Piotr Gorzkiewicz  
 > Uniwersytet Rzeszowski, Wydział Nauk Ścisłych i Technicznych  
 > Kierunek: Informatyka  
-> Promotor: Dr inż. Przemysław Pardel
+> Promotor: dr inż. Przemysław Pardel
 
 ---
 
@@ -11,7 +11,7 @@
 
 Celem pracy jest zaprojektowanie i implementacja prototypu **systemu wspomagania decyzji (DSS)**, który integruje wiedzę ekspercką z danymi pacjentów w celu wsparcia procesu diagnostycznego.
 
-Współczesna medycyna generuje ogromne ilości danych klinicznych, a lekarze muszą na bieżąco łączyć je z wytycznymi i doświadczeniem eksperckim — często w warunkach presji czasowej i złożoności przypadków. System ma to ułatwić poprzez automatyczne generowanie czytelnych i interpretowalnych rekomendacji diagnostycznych.
+Współczesna medycyna generuje ogromne ilości danych klinicznych, a lekarze muszą na bieżąco łączyć je z wytycznymi i doświadczeniem eksperckim - często w warunkach presji czasowej i złożoności przypadków. System ma to ułatwić poprzez automatyczne generowanie czytelnych i interpretowalnych rekomendacji diagnostycznych.
 
 ---
 
@@ -30,9 +30,9 @@ Współczesna medycyna generuje ogromne ilości danych klinicznych, a lekarze mu
 
 System zbudowany jest w podejściu warstwowym:
 
-- **Warstwa prezentacji** — interfejs webowy (HTML + Tailwind CSS)
-- **Warstwa logiki biznesowej** — backend Flask (Python), silnik reguł eksperckich, integracja modeli ML
-- **Warstwa danych** — PostgreSQL (dane pacjentów, reguły eksperckie)
+- **Warstwa prezentacji** - interfejs webowy (HTML + Tailwind CSS)
+- **Warstwa logiki biznesowej** - backend Flask (Python), silnik reguł eksperckich, integracja modeli ML
+- **Warstwa danych** - PostgreSQL (dane pacjentów, reguły eksperckie)
 
 ---
 
