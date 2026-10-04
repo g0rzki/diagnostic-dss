@@ -7,6 +7,7 @@ def test_index_returns_200(client):
     response = client.get("/")
 
     assert response.status_code == 200
+    assert "System wspomagania decyzji diagnostycznych" in response.get_data(as_text=True)
 
 
 def test_health_returns_200_when_database_available(client):

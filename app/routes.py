@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -9,7 +9,7 @@ bp = Blueprint("main", __name__)
 
 @bp.get("/")
 def index():
-    return "System wspomagania decyzji diagnostycznych"
+    return render_template("index.html")
 
 
 @bp.get("/health")

@@ -11,5 +11,11 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres:/docker-entrypoint-initdb.d:ro
 
+  frontend:
+    build: docker/frontend
+    command: tailwindcss -i app/static/css/input.css -o app/static/css/output.css --watch=always
+    volumes:
+      - ./app:/app/app
+
 volumes:
   pgdata:
