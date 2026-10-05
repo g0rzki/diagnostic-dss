@@ -3,7 +3,7 @@ from sqlalchemy.exc import OperationalError
 from app.extensions import db
 
 
-def test_index_returns_200(client):
+def test_index_renders_home_page(client):
     response = client.get("/")
 
     assert response.status_code == 200
