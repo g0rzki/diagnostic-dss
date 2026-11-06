@@ -29,3 +29,4 @@ app/static/css/output.css
 # Dokumenty i notatki prywatne
 *.docx
 notes/
+knowledge/
