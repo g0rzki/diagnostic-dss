@@ -1,0 +1,25 @@
+rules:
+  - id: G1-01
+    name: brak serologii – zleć badania pierwszego rzutu
+    group: G1
+    level: rekomendacja
+    uses: [P2, P3, P7, P15]
+    condition:
+      all:
+        - [P3, '=', null]
+        - [P2, '=', normalne]
+        - [D3, ≠, całkowity]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Zleć oznaczenie przeciwciał anty-TG2 IgA wraz z IgA całkowitym (jeśli nie zostało
+      oznaczone); badanie wykonać na diecie zawierającej gluten.
+    source:
+      ref: esscd1
+      location: Q.II.1 pkt 1–2
+      page: 1865
+      kind: zalecenie
+      grade: {certainty: umiarkowana, strength: silne, agreement: 95}
+    ptge:
+      status: zgodność
+      pages: [5]
+      grade: {certainty: wysoka, strength: silne}

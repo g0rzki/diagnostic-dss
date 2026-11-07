@@ -1,0 +1,54 @@
+rules:
+  - id: G4-04
+    name: dieta ograniczona – HLA przed prowokacją
+    group: G4
+    level: rekomendacja
+    uses: [P2, P3, P4, P9, P13, P15, P16]
+    condition:
+      all:
+        - [P2, '=', ograniczone]
+        - [P16, '=', false]
+        - [P15, '=', nie badano]
+        - any:
+            - all:
+                - [D1, in, [brak, ujemny]]
+                - [P9, ≠, dodatni]
+            - [P13, in, ['0', '1']]
+    conclusion: >-
+      Przed ewentualną prowokacją glutenem oznacz HLA-DQ2/DQ8 – wynik ujemny wyklucza celiakię
+      i prowokacja nie jest potrzebna. Poprawa objawów po ograniczeniu glutenu ani ich nawrót
+      po jego powrocie nie są podstawą rozpoznania.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – zalecenie i kluczowe uwagi (s. 1875); Q.IV.5 (s. 1874); Q.IV.1.3 (s. 1870)
+      page: 1875
+      kind: zalecenie
+      grade: {certainty: niska, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [11, 12]
+
+  - id: G4-11
+    name: po prowokacji, histologia bez serologii – oznacz serologię
+    group: G4
+    level: rekomendacja
+    uses: [P3, P7, P9, P13, P15, P16]
+    condition:
+      all:
+        - [P16, '=', true]
+        - [P13, ≠, nie wykonano]
+        - [P3, '=', null]
+        - [D5, '=', nieustalona]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Oznacz anty-TG2 IgA z IgA całkowitym – interpretacja wyniku histopatologicznego wymaga
+      wyniku serologii.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – kluczowe uwagi (s. 1875); Q.IV.1.1 (s. 1870)
+      page: 1875
+      kind: zalecenie
+      grade: {certainty: wysoka, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [11]

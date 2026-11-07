@@ -1,0 +1,49 @@
+rules:
+  - id: G2-04
+    name: druga próbka dodatnia poniżej 10 × GGN – niejednoznaczność źródła
+    group: G2
+    level: informacja
+    uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
+    condition:
+      all:
+        - [D4, '=', true]
+        - [P12, '=', tak]
+        - [D1_2, '=', dodatni]
+        - [D2_2, '=', false]
+    conclusion: >-
+      Druga próbka jest dodatnia, ale poniżej 10 × GGN. Kluczowe uwagi do zalecenia ESsCD
+      uznają każdy wynik dodatni za potwierdzający, natomiast uzasadnienie warunkowo zaleca
+      drugi pomiar ≥ 10 × GGN; nie ma bezpośrednich dowodów korzyści z powtórzenia badania.
+      Ocena należy do lekarza.
+    source:
+      ref: esscd1
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      page: 1870
+      kind: zalecenie
+    ptge:
+      status: zgodność
+      pages: [5]
+
+  - id: G2-07
+    name: wiek ≥ 45 lat – ścieżka bez biopsji nie ma zastosowania
+    group: G2
+    level: rekomendacja
+    uses: [P1, P3, P4, P13, P16]
+    condition:
+      all:
+        - [D2, '=', true]
+        - [P1, ≥, 45]
+        - [P13, '=', nie wykonano]
+        - [P16, ≠, true]
+    conclusion: >-
+      U pacjenta w wieku ≥ 45 lat rozpoznanie bez biopsji nie ma zastosowania mimo wysokiego
+      miana anty-TG2 IgA. Wskazana gastroduodenoskopia z pobraniem wycinków z dwunastnicy.
+    source:
+      ref: esscd1
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      page: 1870
+      kind: zalecenie
+      grade: {certainty: niska, strength: opinia ekspercka, agreement: 95}
+    ptge:
+      status: zgodność
+      pages: [9]
