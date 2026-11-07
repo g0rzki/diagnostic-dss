@@ -11,7 +11,8 @@ SAMPLE = Path(__file__).parent / "data" / "rules"
 
 def copy_sample(tmp_path, change=None):
     files = {
-        path.name: yaml.safe_load(path.read_text(encoding="utf-8")) for path in SAMPLE.iterdir()
+        path.name: yaml.safe_load(path.read_text(encoding="utf-8"))
+        for path in SAMPLE.glob("*.yaml")
     }
     if change:
         change(files)
@@ -95,6 +96,27 @@ def set_key(key, value):
         (lambda f: first_rule(f)["source"].update(ref="bsg"), "source.ref"),
         (lambda f: first_rule(f)["source"]["grade"].update(strength="mocne"), "strength"),
         (lambda f: first_rule(f)["ptge"].update(status="brak odniesienia"), "ptge.pages"),
+        (lambda f: first_rule(f)["source"].update(quotes=["cytat"]), "source: nieznane pola"),
+        (lambda f: first_rule(f)["ptge"].update(ref="ptge"), "ptge: nieznane pola"),
+        (lambda f: first_rule(f)["source"].update(page=True), "source.page"),
+        (lambda f: first_rule(f)["source"].update(location=""), "source.location"),
+        (lambda f: first_rule(f)["source"].update(kind="rycina"), "source.kind"),
+        (set_key("source", "esscd1"), "source: wymagany słownik"),
+        (set_key("ptge", "zgodność"), "ptge: wymagany słownik"),
+        (lambda f: first_rule(f)["ptge"].update(pages=[True]), "ptge.pages"),
+        (lambda f: first_rule(f)["source"]["grade"].update(agreement=True), "agreement"),
+        (lambda f: first_rule(f)["source"]["grade"].update(agreement=101), "agreement"),
+        (lambda f: first_rule(f)["source"]["grade"].update(gr="silne"), "dozwolone pola"),
+        (set_key("name", " "), "name: wymagany niepusty tekst"),
+        (set_key("uses", []), "wymagana niepusta lista"),
+        (set_key("uses", ["P2", "P2", "P3", "P7", "P15"]), "powtórzone parametry"),
+        (replace_comparison(3, ["P17", "=", "tak"]), "wymagane true / false"),
+        (replace_comparison(3, ["P1", "=", "trzydzieści"]), "wymagana liczba"),
+        (replace_comparison(3, ["P14", "=", 4]), "tylko z null"),
+        (replace_comparison(3, [15, "=", "ujemny"]), "musi być napisem"),
+        (replace_comparison(3, ["P1", "<", None]), "wymaga liczby"),
+        (replace_comparison(3, {"all": []}), "niepustej listy warunków"),
+        (replace_comparison(3, {"not": [["P15", "=", "ujemny"]]}), "nieprawidłowy warunek"),
     ],
 )
 def test_invalid_rule_is_rejected(tmp_path, change, expected):
@@ -146,3 +168,59 @@ def test_directory_without_rule_files_is_rejected(tmp_path):
     (tmp_path / "sources.yaml").write_text((SAMPLE / "sources.yaml").read_text(encoding="utf-8"))
 
     assert "brak plików reguł" in problems(tmp_path)[0]
+
+
+def test_rule_that_is_not_a_mapping_is_rejected(tmp_path):
+    def change(files):
+        files["g1.yaml"]["rules"][0] = "G1-01"
+
+    assert problems(copy_sample(tmp_path, change)) == ["g1.yaml: #1: reguła musi być słownikiem"]
+
+
+def test_rules_without_id_in_two_files_are_not_reported_as_duplicates(tmp_path):
+    def change(files):
+        del first_rule(files)["id"]
+        del files["g2.yaml"]["rules"][0]["id"]
+
+    found = problems(copy_sample(tmp_path, change))
+
+    assert found == ["g1.yaml: #1: brak pól ['id']", "g2.yaml: #1: brak pól ['id']"]
+
+
+def test_group_file_without_rules_list_is_rejected(tmp_path):
+    def change(files):
+        files["g4.yaml"] = {"reguly": []}
+
+    assert "wyłącznie listę 'rules'" in problems(copy_sample(tmp_path, change))[0]
+
+
+@pytest.mark.parametrize(
+    "sources, expected",
+    [
+        ([], "wymagany słownik źródeł"),
+        ({"esscd1": {"name": "ESsCD"}}, "wymagane pola name i citation"),
+        ({"esscd1": {"name": "ESsCD", "citation": ""}}, "niepustym tekstem"),
+    ],
+)
+def test_invalid_sources_file_is_rejected(tmp_path, sources, expected):
+    def change(files):
+        files["sources.yaml"] = sources
+
+    found = problems(copy_sample(tmp_path, change))
+
+    assert len(found) == 1
+    assert found[0].startswith("sources.yaml: ")
+    assert expected in found[0]
+
+
+def test_missing_sources_file_is_rejected(tmp_path):
+    directory = copy_sample(tmp_path)
+    (directory / "sources.yaml").unlink()
+
+    assert problems(directory)[0].startswith("sources.yaml: ")
+
+
+def test_rule_id_must_start_with_group_of_its_file(tmp_path):
+    found = problems(copy_sample(tmp_path, set_key("id", "G2-01")))
+
+    assert found == ["g1.yaml: G2-01: id: musi zaczynać się od G1-"]

@@ -34,6 +34,8 @@ REQUIRED_KEYS = {
     "ptge",
 }
 OPTIONAL_KEYS = {"basis"}
+SOURCE_KEYS = {"ref", "location", "page", "kind", "grade"}
+PTGE_KEYS = {"status", "pages", "grade"}
 
 
 @dataclass(frozen=True)
@@ -125,6 +127,15 @@ def _field_type(field: str) -> tuple[ParamType, tuple[str, ...]]:
 
 def _is_number(value: object) -> bool:
     return isinstance(value, int | float) and not isinstance(value, bool)
+
+
+def _is_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _check_keys(raw: Mapping, allowed: set[str], where: str) -> None:
+    if unknown := set(raw) - allowed:
+        raise InvalidRule(f"{where}: nieznane pola {sorted(unknown)}")
 
 
 def _parse_value(field: str, value: object) -> object:
@@ -228,7 +239,7 @@ def _parse_grade(raw: object, where: str) -> Grade | None:
     if not isinstance(raw, Mapping) or set(raw) - {"certainty", "strength", "agreement"}:
         raise InvalidRule(f"{where}.grade: dozwolone pola certainty, strength, agreement")
     agreement = raw.get("agreement")
-    if agreement is not None and not (isinstance(agreement, int) and 0 <= agreement <= 100):
+    if agreement is not None and not (_is_int(agreement) and 0 <= agreement <= 100):
         raise InvalidRule(f"{where}.grade.agreement: wymagana liczba całkowita 0–100")
     return Grade(
         _choice(raw, "certainty", CERTAINTIES, f"{where}.grade"),
@@ -240,11 +251,12 @@ def _parse_grade(raw: object, where: str) -> Grade | None:
 def _parse_source(raw: object, sources: Mapping[str, Reference]) -> Source:
     if not isinstance(raw, Mapping):
         raise InvalidRule("source: wymagany słownik")
+    _check_keys(raw, SOURCE_KEYS, "source")
     if raw.get("ref") not in sources:
         raise InvalidRule(f"source.ref: nieznane źródło {raw.get('ref')!r}")
     if not isinstance(raw.get("location"), str) or not raw["location"]:
         raise InvalidRule("source.location: wymagany opis miejsca w wytycznych")
-    if not isinstance(raw.get("page"), int):
+    if not _is_int(raw.get("page")):
         raise InvalidRule("source.page: wymagany numer strony")
     return Source(
         raw["ref"],
@@ -258,9 +270,10 @@ def _parse_source(raw: object, sources: Mapping[str, Reference]) -> Source:
 def _parse_ptge(raw: object) -> Ptge:
     if not isinstance(raw, Mapping):
         raise InvalidRule("ptge: wymagany słownik")
+    _check_keys(raw, PTGE_KEYS, "ptge")
     status = _choice(raw, "status", PTGE_STATUSES, "ptge")
     pages = raw.get("pages", [])
-    if not isinstance(pages, list) or not all(isinstance(page, int) for page in pages):
+    if not isinstance(pages, list) or not all(_is_int(page) for page in pages):
         raise InvalidRule("ptge.pages: wymagana lista numerów stron")
     if (status == "brak odniesienia") != (not pages):
         raise InvalidRule("ptge.pages: strony podaje się wtedy i tylko wtedy, gdy PTG-E się odnosi")
@@ -283,7 +296,7 @@ def _parse_rule(raw: object, group: str, sources: Mapping[str, Reference]) -> Ru
         raise InvalidRule(f"nieznane pola {sorted(unknown)}")
     if raw["group"] != group:
         raise InvalidRule(f"group: {raw['group']!r} niezgodne z plikiem ({group})")
-    if not str(raw["id"]).startswith(f"{group}-"):
+    if not isinstance(raw["id"], str) or not raw["id"].startswith(f"{group}-"):
         raise InvalidRule(f"id: musi zaczynać się od {group}-")
     levels = tuple(level.value for level in Level)
     if raw["level"] not in levels:
@@ -320,6 +333,8 @@ def _load_sources(path: Path) -> dict[str, Reference]:
     for ref, entry in raw.items():
         if not isinstance(entry, Mapping) or set(entry) != {"name", "citation"}:
             raise InvalidRule(f"{ref}: wymagane pola name i citation")
+        if not all(isinstance(entry[key], str) and entry[key].strip() for key in entry):
+            raise InvalidRule(f"{ref}: name i citation muszą być niepustym tekstem")
         sources[ref] = Reference(entry["name"], entry["citation"])
     return sources
 
@@ -351,15 +366,17 @@ def load_rules(directory: Path) -> RuleBase:
             problems.append(f"{path.name}: plik musi zawierać wyłącznie listę 'rules'")
             continue
         for index, entry in enumerate(raw["rules"], start=1):
-            rule_id = entry.get("id", f"#{index}") if isinstance(entry, Mapping) else f"#{index}"
-            if rule_id in seen:
-                problems.append(f"{path.name}: {rule_id}: powtórzone id")
-                continue
-            seen.add(rule_id)
+            rule_id = entry.get("id") if isinstance(entry, Mapping) else None
+            label = rule_id if isinstance(rule_id, str) else f"#{index}"
+            if isinstance(rule_id, str):
+                if rule_id in seen:
+                    problems.append(f"{path.name}: {label}: powtórzone id")
+                    continue
+                seen.add(rule_id)
             try:
                 rules.append(_parse_rule(entry, group, sources))
             except InvalidRule as error:
-                problems.append(f"{path.name}: {rule_id}: {error}")
+                problems.append(f"{path.name}: {label}: {error}")
 
     if problems:
         raise RuleFileError(problems)

@@ -41,7 +41,7 @@ def test_age_range_is_18_to_120(age, valid):
     assert validate(form(P1=age)).is_valid is valid
 
 
-@pytest.mark.parametrize("age", ["abc", "30,5", "30.5", True])
+@pytest.mark.parametrize("age", ["abc", "30,5", "30.5", True, "NaN", "Infinity"])
 def test_age_must_be_an_integer(age):
     assert error_fields(validate(form(P1=age))) == ["P1"]
 
