@@ -56,13 +56,17 @@ def _to_int(param: Parameter, raw: object) -> int:
     return int(number)
 
 
+def _number_text(number: Decimal) -> str:
+    return str(number).replace(".", ",")
+
+
 def _check_range(param: Parameter, number: int | Decimal) -> None:
     if param.min is not None and number < param.min:
-        raise InvalidValue(f"wartość nie może być mniejsza niż {param.min}")
+        raise InvalidValue(f"wartość nie może być mniejsza niż {_number_text(param.min)}")
     if param.max is not None and number > param.max:
-        raise InvalidValue(f"wartość nie może być większa niż {param.max}")
+        raise InvalidValue(f"wartość nie może być większa niż {_number_text(param.max)}")
     if param.min_exclusive is not None and number <= param.min_exclusive:
-        raise InvalidValue(f"wartość musi być większa niż {param.min_exclusive}")
+        raise InvalidValue(f"wartość musi być większa niż {_number_text(param.min_exclusive)}")
 
 
 def _parse(param: Parameter, raw: object) -> object:
@@ -166,8 +170,8 @@ def validate(raw: Mapping[str, object]) -> ValidationResult:
             warnings.append(
                 Issue(
                     "P3",
-                    "wyniki niespójne: dodatnie anty-TG2 IgA przy IgA całkowitym < 0,07 g/L"
-                    " – sprawdź wyniki",
+                    "wyniki niespójne: dodatnie anty-TG2 IgA przy IgA całkowitym < 0,07 g/L,"
+                    " sprawdź wyniki",
                 )
             )
 

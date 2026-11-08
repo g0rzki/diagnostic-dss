@@ -89,6 +89,14 @@ def test_lab_bound_prefix_is_stripped_for_antibody_results(raw, expected):
     assert result.values["P5"] == Decimal(expected)
 
 
+def test_range_message_uses_decimal_comma():
+    result = validate(form(P7="1", P8="0,07"))
+
+    assert [issue.message for issue in result.errors] == [
+        "dolna granica normy IgA całkowitego: wartość musi być większa niż 0,07"
+    ]
+
+
 def test_lab_bound_prefix_is_rejected_for_total_iga():
     assert error_fields(validate(form(P7="< 0,07", P8="0,7"))) == ["P7"]
 

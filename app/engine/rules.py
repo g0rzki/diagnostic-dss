@@ -144,7 +144,7 @@ def _parse_value(field: str, value: object) -> object:
     field_type, allowed = _field_type(field)
     if value is None:
         if field in DERIVED:
-            raise InvalidRule(f"{field}: wartość pochodna jest zawsze ustalona – null niedozwolone")
+            raise InvalidRule(f"{field}: wartość pochodna jest zawsze ustalona, null niedozwolone")
         return None
     if field_type is ParamType.ENUM:
         if value not in allowed:
@@ -192,7 +192,7 @@ def _parse_node(raw: object) -> Node:
                 raise InvalidRule(f"'{key}' wymaga niepustej listy warunków")
             nodes = tuple(_parse_node(item) for item in items)
             return AllOf(nodes) if key == "all" else AnyOf(nodes)
-    raise InvalidRule(f"nieprawidłowy warunek {raw!r} – oczekiwano porównania, 'all' albo 'any'")
+    raise InvalidRule(f"nieprawidłowy warunek {raw!r}, oczekiwano porównania, 'all' albo 'any'")
 
 
 def _fields(node: Node) -> set[str]:
