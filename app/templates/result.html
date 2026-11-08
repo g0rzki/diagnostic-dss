@@ -5,7 +5,7 @@
 
 {% block content %}
 {% set level_borders = {
-  "rekomendacja": "border-l-teal-600",
+  "rekomendacja": "border-l-brand",
   "ostrzeżenie": "border-l-amber-500",
   "informacja": "border-l-slate-400",
 } %}
@@ -25,7 +25,7 @@
   {% set rules = result.at_level(level) %}
   {% if rules %}
     <section class="mt-8">
-      <h2 class="text-lg font-semibold text-teal-800">{{ title }}</h2>
+      <h2 class="text-lg font-semibold text-brand">{{ title }}</h2>
       <p class="text-sm text-slate-500">{{ level.value | capitalize }} {{ description }}.</p>
       <ul class="mt-3 space-y-3">
         {% for rule in rules %}

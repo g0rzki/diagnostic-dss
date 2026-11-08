@@ -94,21 +94,29 @@ def rule(base, rule_id):
     return next(rule for rule in base.rules if rule.id == rule_id)
 
 
-def test_source_location_always_has_a_page(base):
-    assert source_text(base, rule(base, "G1-01")) == "ESsCD 2025 cz. 1, Q.II.1 pkt 1–2 (s. 1865)"
-    assert all("(s. " in source_text(base, item) for item in base.rules)
+@pytest.mark.parametrize(
+    ("rule_id", "expected"),
+    [
+        ("G1-01", "ESsCD 2025 cz. 1, s. 1865"),
+        ("G1-02", "ESsCD 2025 cz. 1, s. 1865, 1866, 1875"),
+        ("G3-09", "ESsCD 2025 cz. 1, s. 1868, 1872, 1875"),
+        ("G4-07", "ESsCD 2025 cz. 1, s. 1876–1877"),
+    ],
+)
+def test_source_text_lists_pages(base, rule_id, expected):
+    assert source_text(base, rule(base, rule_id)) == expected
 
 
 @pytest.mark.parametrize(
     ("rule_id", "expected"),
     [
-        ("G1-01", "PTG-E 2026: zgodność (s. 5)"),
-        ("G2-10", "PTG-E 2026: brak odniesienia"),
-        ("G3-03", "PTG-E 2026: różnica (s. 5, 7), kierunek reguły według PTG-E"),
+        ("G1-01", "zgodność, s. 5"),
+        ("G2-10", "brak odniesienia"),
+        ("G3-03", "różnica, s. 5, 7; kierunek reguły według PTG-E"),
     ],
 )
 def test_ptge_text(base, rule_id, expected):
-    assert ptge_text(base, rule(base, rule_id)) == expected
+    assert ptge_text(rule(base, rule_id)) == expected
 
 
 def test_every_source_has_role_and_doi(base):

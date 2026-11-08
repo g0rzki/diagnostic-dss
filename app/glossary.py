@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 
 from app.engine.derived import DERIVED
@@ -191,19 +192,21 @@ def _pages(pages) -> str:
     return ", ".join(str(page) for page in pages)
 
 
+def source_pages(rule: Rule) -> tuple[str, ...]:
+    pages = set(re.findall(r"s\. (\d+(?:–\d+)?)", rule.source.location)) or {str(rule.source.page)}
+    return tuple(sorted(pages, key=lambda page: int(page.split("–")[0])))
+
+
 def source_text(base: RuleBase, rule: Rule) -> str:
-    location = rule.source.location
-    if "s. " not in location:
-        location = f"{location} (s. {rule.source.page})"
-    return f"{base.sources[rule.source.ref].name}, {location}"
+    return f"{base.sources[rule.source.ref].name}, s. {', '.join(source_pages(rule))}"
 
 
-def ptge_text(base: RuleBase, rule: Rule) -> str:
-    text = f"{base.sources['ptge'].name}: {rule.ptge.status}"
+def ptge_text(rule: Rule) -> str:
+    text = rule.ptge.status
     if rule.ptge.pages:
-        text = f"{text} (s. {_pages(rule.ptge.pages)})"
+        text = f"{text}, s. {_pages(rule.ptge.pages)}"
     if rule.basis == "ptge":
-        text = f"{text}, kierunek reguły według PTG-E"
+        text = f"{text}; kierunek reguły według PTG-E"
     return text
 
 
@@ -214,7 +217,7 @@ def rules_by_group(base: RuleBase) -> list[tuple[str, str, str, list[RuleEntry]]
             name,
             scope,
             [
-                RuleEntry(rule, source_text(base, rule), ptge_text(base, rule))
+                RuleEntry(rule, source_text(base, rule), ptge_text(rule))
                 for rule in base.rules
                 if rule.group == group
             ],

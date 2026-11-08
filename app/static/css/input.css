@@ -1,16 +1,22 @@
 @import "tailwindcss" source("../../templates");
 
+@theme {
+  --color-brand: var(--color-teal-700);
+  --color-brand-dark: var(--color-teal-800);
+  --color-brand-light: var(--color-teal-50);
+}
+
 @layer components {
   .btn-primary,
   .btn-secondary {
-    @apply inline-block rounded border px-5 py-2 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2;
+    @apply inline-block rounded border px-5 py-2 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2;
   }
 
   .btn-primary {
-    @apply border-teal-700 bg-teal-700 text-white hover:bg-teal-800;
+    @apply border-brand bg-brand text-white hover:border-brand-dark hover:bg-brand-dark;
   }
 
   .btn-secondary {
-    @apply border-teal-700 bg-white text-teal-800 hover:bg-teal-50;
+    @apply border-brand bg-white text-brand hover:bg-brand-light;
   }
 }

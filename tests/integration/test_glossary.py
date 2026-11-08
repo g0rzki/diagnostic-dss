@@ -18,8 +18,8 @@ def test_glossary_names_sources_and_levels(client):
     assert "ESsCD 2025 cz. 1" in page
     assert "PTG-E 2026" in page
     assert 'href="https://doi.org/10.1002/ueg2.70119"' in page
-    source = "Źródło: ESsCD 2025 cz. 1, Q.II.1 pkt 1–2 (s. 1865). PTG-E 2026: zgodność (s. 5)."
-    assert source in page
+    assert "<dd>ESsCD 2025 cz. 1, s. 1865</dd>" in page
+    assert "<dd>zgodność, s. 5</dd>" in page
     assert "sygnalizuje czynnik, który może zafałszować wynik" in page
 
 

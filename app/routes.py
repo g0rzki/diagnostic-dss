@@ -88,6 +88,7 @@ def glossary():
         derived=derived_entries(base),
         groups=rules_by_group(base),
         sources=source_entries(base),
+        ptge_name=base.sources["ptge"].name,
     )
 
 

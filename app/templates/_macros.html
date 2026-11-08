@@ -1,10 +1,10 @@
 {% macro code_badge(code, tip) %}
-  <span class="group relative inline-block align-middle">
+  <span class="group relative inline-block shrink-0 align-middle">
     <a href="{{ url_for('main.glossary') }}#{{ code }}" target="_blank" rel="noopener"
        aria-describedby="tip-{{ code }}"
-       class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-normal text-slate-500 hover:bg-teal-50 hover:text-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600">{{ code }}</a>
+       class="whitespace-nowrap rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-normal text-slate-600 hover:bg-brand-light hover:text-brand-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">{{ code }}</a>
     <span id="tip-{{ code }}" role="tooltip"
-          class="pointer-events-none absolute bottom-full left-0 z-10 mb-2 hidden w-72 rounded bg-slate-800 px-3 py-2 text-xs font-normal leading-snug text-white shadow-lg sm:group-hover:block sm:group-focus-within:block">
+          class="pointer-events-none absolute bottom-full left-0 z-10 mb-2 hidden w-72 whitespace-normal rounded bg-slate-800 px-3 py-2 text-xs font-normal leading-snug text-white shadow-lg sm:group-hover:block sm:group-focus-within:block">
       {{ tip }}
       <span class="mt-1 block text-slate-300">Kliknij, aby otworzyć słownik oznaczeń w nowej karcie.</span>
     </span>

@@ -7,7 +7,7 @@
   <div class="mt-2 flex flex-wrap gap-x-5 gap-y-2">
     {% for option in options %}
       <label class="inline-flex items-center gap-2">
-        <input type="radio" name="{{ name }}" value="{{ option }}" class="accent-teal-700"
+        <input type="radio" name="{{ name }}" value="{{ option }}" class="accent-brand"
                {% if current == option %}checked{% endif %}>
         <span>{{ option }}</span>
       </label>
@@ -18,7 +18,7 @@
 {% macro text_input(name, current, invalid) %}
   <input type="text" inputmode="decimal" id="{{ name }}" name="{{ name }}" value="{{ current or '' }}"
          {% if invalid %}aria-invalid="true"{% endif %}
-         class="w-40 rounded border px-2 py-1 focus:outline-none {{ 'border-red-500' if invalid else 'border-slate-300 focus:border-teal-600' }}">
+         class="w-40 rounded border px-2 py-1 focus:outline-none {{ 'border-red-500' if invalid else 'border-slate-300 focus:border-brand' }}">
 {% endmacro %}
 
 {% macro title(param) %}{{ param.label[:1] | upper }}{{ param.label[1:] }}{% endmacro %}
@@ -88,7 +88,7 @@
 <form method="post" action="{{ url_for('main.consultation_result') }}" class="mt-6 space-y-6" novalidate>
   {% for section in sections %}
     <section class="rounded-lg border border-slate-200 bg-white px-6 py-5 shadow-sm">
-      <h2 class="text-lg font-semibold text-teal-800">{{ section.title }}</h2>
+      <h2 class="text-lg font-semibold text-brand">{{ section.title }}</h2>
       <div class="mt-4 flex flex-col gap-6">
         {% for param in section.fields %}{{ field(param) }}{% endfor %}
       </div>
