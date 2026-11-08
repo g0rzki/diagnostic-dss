@@ -1,0 +1,196 @@
+rules:
+  - id: G1-01
+    name: brak serologii – zleć badania pierwszego rzutu
+    group: G1
+    level: rekomendacja
+    uses: [P2, P3, P7, P15]
+    condition_text: >-
+      brak wyniku anty-TG2 IgA (P3), spożycie glutenu normalne (P2), brak stwierdzonego
+      całkowitego niedoboru IgA (D3) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [P3, '=', null]
+        - [P2, '=', normalne]
+        - [D3, ≠, całkowity]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Zleć oznaczenie przeciwciał anty-TG2 IgA wraz z IgA całkowitym (jeśli nie zostało
+      oznaczone); badanie wykonać na diecie zawierającej gluten.
+    source:
+      ref: esscd1
+      location: Q.II.1 pkt 1–2
+      page: 1865
+      kind: zalecenie
+      grade: {certainty: umiarkowana, strength: silne, agreement: 95}
+    ptge:
+      status: zgodność
+      pages: [5]
+      grade: {certainty: wysoka, strength: silne}
+
+  - id: G1-02
+    name: badania przy ograniczonym glutenie – ryzyko wyniku fałszywie ujemnego
+    group: G1
+    level: ostrzeżenie
+    uses: [P2, P3, P4, P9, P15, P16]
+    condition_text: >-
+      spożycie glutenu ograniczone (P2), prowokacja glutenem niezakończona (P16 = nie),
+      anty-TG2 IgA brak lub ujemne (D1), testy IgG nie dodatnie (P9 ≠ dodatni) i HLA nie
+      ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [P2, '=', ograniczone]
+        - [P16, '=', false]
+        - [D1, in, [brak, ujemny]]
+        - [P9, ≠, dodatni]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Badania serologiczne i histologiczne przy ograniczonym spożyciu glutenu mogą dać wynik
+      fałszywie ujemny – markery serologiczne normalizują się na diecie bezglutenowej. Ujemny
+      wynik nie wyklucza celiakii.
+    source:
+      ref: esscd1
+      location: Q.II.1 pkt 3 (zalecenie, s. 1865) + uzasadnienie (s. 1866); uzasadnienie Q.IV.8 (s. 1875)
+      page: 1865
+      kind: zalecenie
+      grade: {certainty: umiarkowana, strength: silne, agreement: 95}
+    ptge:
+      status: zgodność
+      pages: [5, 11]
+
+  - id: G1-03
+    name: całkowity niedobór IgA – serologia IgA niewiarygodna, testy IgG
+    group: G1
+    level: rekomendacja
+    uses: [P7, P9, P15]
+    condition_text: >-
+      niedobór całkowity IgA (D3), testy IgG niewykonane (P9 = nie wykonano) i HLA nie ujemne
+      (P15 ≠ ujemny)
+    condition:
+      all:
+        - [D3, '=', całkowity]
+        - [P9, '=', nie wykonano]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Całkowity niedobór IgA – serologia w klasie IgA jest niewiarygodna (wynik ujemny może
+      być fałszywie ujemny). Zleć serologię w klasie IgG (anty-TG2 IgG lub anty-DGP IgG).
+    source:
+      ref: esscd1
+      location: Q.II.6 (zalecenie) + uzasadnienie
+      page: 1868
+      kind: zalecenie
+      grade: {certainty: niska, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [6]
+
+  - id: G1-04
+    name: częściowy niedobór IgA przy ujemnej serologii – niejednoznaczność źródeł
+    group: G1
+    level: informacja
+    uses: [P3, P4, P7, P8, P9, P15]
+    condition_text: >-
+      niedobór częściowy IgA (D3), anty-TG2 IgA ujemne (D1), testy IgG niewykonane (P9 = nie
+      wykonano) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [D3, '=', częściowy]
+        - [D1, '=', ujemny]
+        - [P9, '=', nie wykonano]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Częściowy niedobór IgA. Zalecenie ESsCD wiąże testy IgG z niedoborem całkowitym,
+      natomiast uzasadnienie ESsCD i algorytm PTG-E (ryc. 3) mówią ogólnie o niedoborze IgA /
+      IgA poniżej normy. Rozważ testy IgG – decyzja należy do lekarza.
+    source:
+      ref: esscd1
+      location: Q.II.6 (zalecenie) + uzasadnienie
+      page: 1868
+      kind: uzasadnienie
+    ptge:
+      status: różnica
+      pages: [10]
+
+  - id: G1-05
+    name: ujemna serologia przy prawidłowym IgA i diecie z glutenem
+    group: G1
+    level: informacja
+    uses: [P2, P3, P4, P7, P8, P9, P13, P15]
+    condition_text: >-
+      anty-TG2 IgA ujemne (D1), IgA całkowite w normie (D3), spożycie glutenu normalne (P2),
+      histologia niewykonana (P13 = nie wykonano), testy IgG nie dodatnie (P9 ≠ dodatni) i HLA
+      nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [D1, '=', ujemny]
+        - [D3, '=', norma]
+        - [P2, '=', normalne]
+        - [P13, '=', nie wykonano]
+        - [P9, ≠, dodatni]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Wynik ujemny zmniejsza prawdopodobieństwo celiakii. Czułość anty-TG2 IgA zależy od testu
+      (metaanaliza u dorosłych ok. 91%, testy automatyczne do 99%), a postać seronegatywna
+      stanowi ok. 2–5% przypadków – przy utrzymującym się silnym podejrzeniu klinicznym
+      decyzja o dalszej diagnostyce należy do lekarza.
+    source:
+      ref: esscd1
+      location: uzasadnienie Q.II.1 (s. 1866); uzasadnienie Q.IV.4 (s. 1873)
+      page: 1866
+      kind: uzasadnienie
+    ptge:
+      status: zgodność
+      pages: [5, 6]
+
+  - id: G1-06
+    name: krewny 1. stopnia – wskazanie do badania przesiewowego
+    group: G1
+    level: informacja
+    uses: [P3, P9, P13, P15, P17]
+    condition_text: >-
+      krewny 1. stopnia z celiakią (P17), brak wyniku anty-TG2 IgA (P3), testy IgG niewykonane
+      (P9 = nie wykonano), brak histologii (P13 = nie wykonano) i HLA nie ujemne (P15 ≠
+      ujemny)
+    condition:
+      all:
+        - [P17, '=', true]
+        - [P3, '=', null]
+        - [P9, '=', nie wykonano]
+        - [P13, '=', nie wykonano]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Wskazane badanie w kierunku celiakii także przy braku objawów.
+    source:
+      ref: esscd1
+      location: tabela 2 (s. 1866); sekcja 4.2.1 (s. 1864); sekcja 5.1.1 (s. 1865)
+      page: 1866
+      kind: tabela
+    ptge:
+      status: zgodność
+      pages: [2, 4, 5]
+      grade: {certainty: wysoka, strength: silne}
+
+  - id: G1-07
+    name: wynik anty-TG2 bez IgA całkowitego – uzupełnij IgA
+    group: G1
+    level: rekomendacja
+    uses: [P3, P7, P15]
+    condition_text: >-
+      jest wynik anty-TG2 IgA (P3), brak IgA całkowitego (P7) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [P3, ≠, null]
+        - [P7, '=', null]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Uzupełnij oznaczenie IgA całkowitego (zalecane jednocześnie z anty-TG2 IgA). Bez niego
+      ujemnego wyniku anty-TG2 IgA nie można uznać za wiarygodny – przy niedoborze IgA bywa
+      fałszywie ujemny.
+    source:
+      ref: esscd1
+      location: Q.II.1 pkt 2 (zalecenie, s. 1865) + uzasadnienie (s. 1866)
+      page: 1865
+      kind: zalecenie
+      grade: {certainty: umiarkowana, strength: silne, agreement: 95}
+    ptge:
+      status: zgodność
+      pages: [5]

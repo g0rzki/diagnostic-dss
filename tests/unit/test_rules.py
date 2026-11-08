@@ -108,6 +108,7 @@ def set_key(key, value):
         (lambda f: first_rule(f)["source"]["grade"].update(agreement=101), "agreement"),
         (lambda f: first_rule(f)["source"]["grade"].update(gr="silne"), "dozwolone pola"),
         (set_key("name", " "), "name: wymagany niepusty tekst"),
+        (set_key("condition_text", ""), "condition_text: wymagany niepusty tekst"),
         (set_key("uses", []), "wymagana niepusta lista"),
         (set_key("uses", ["P2", "P2", "P3", "P7", "P15"]), "powtórzone parametry"),
         (replace_comparison(3, ["P17", "=", "tak"]), "wymagane true / false"),

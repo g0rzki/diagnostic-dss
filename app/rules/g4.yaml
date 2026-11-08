@@ -1,0 +1,334 @@
+rules:
+  - id: G4-01
+    name: dodatnie IgG przy niedoborze IgA – biopsja
+    group: G4
+    level: rekomendacja
+    uses: [P3, P4, P7, P8, P9, P13, P16]
+    condition_text: >-
+      testy IgG dodatnie (P9), IgA całkowite poniżej normy (D3 – niedobór częściowy lub
+      całkowity), anty-TG2 IgA nie jest wiarygodnie dodatnie (brak P3, P3 ≤ P4 albo niedobór
+      całkowity), histologia niewykonana (P13 = nie wykonano) i prowokacja niezakończona (P16
+      ≠ tak)
+    condition:
+      all:
+        - [P9, '=', dodatni]
+        - [D3, in, [częściowy, całkowity]]
+        - any:
+            - [D1, in, [brak, ujemny]]
+            - [D3, '=', całkowity]
+        - [P13, '=', nie wykonano]
+        - [P16, ≠, true]
+    conclusion: >-
+      Dodatnie przeciwciała w klasie IgG przy niedoborze IgA – wskazana gastroduodenoskopia z
+      pobraniem wycinków z dwunastnicy. Rozpoznania bez biopsji nie stosuje się dla serologii
+      IgG.
+    source:
+      ref: esscd1
+      location: Q.IV.1.1 i Q.IV.1.2 (zalecenia, s. 1870); ryc. 1 (s. 1874)
+      page: 1870
+      kind: zalecenie
+      grade: {certainty: wysoka, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [10]
+
+  - id: G4-02
+    name: niedobór IgA, ujemne IgG i złe wchłanianie – biopsja mimo ujemnych IgG
+    group: G4
+    level: rekomendacja
+    uses: [P2, P7, P9, P10, P13, P15, P16]
+    condition_text: >-
+      całkowity niedobór IgA (D3), testy IgG ujemne (P9), objawy złego wchłaniania (P10),
+      histologia niewykonana (P13 = nie wykonano), gluten wystarczający (D8) i HLA nie ujemne
+      (P15 ≠ ujemny)
+    condition:
+      all:
+        - [D3, '=', całkowity]
+        - [P9, '=', ujemny]
+        - [P10, '=', true]
+        - [P13, '=', nie wykonano]
+        - [D8, '=', true]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Przy całkowitym niedoborze IgA i objawach złego wchłaniania wskazana gastroduodenoskopia
+      z pobraniem wycinków mimo ujemnych testów IgG – co najmniej 4 wycinki z części
+      zstępującej dwunastnicy oraz 1–2 z opuszki.
+    source:
+      ref: esscd1
+      location: Q.II.6 – zalecenie (s. 1868); Q.III.1 (s. 1868)
+      page: 1868
+      kind: zalecenie
+      grade: {certainty: niska, strength: silne, agreement: 100}
+    ptge:
+      status: różnica
+      pages: [7, 10]
+
+  - id: G4-03
+    name: serologia ujemna przy niedoborze IgA – celiakia niepotwierdzona
+    group: G4
+    level: informacja
+    uses: [P3, P4, P7, P8, P9, P13, P15]
+    condition_text: >-
+      serologia swoista ujemna (D5), IgA całkowite poniżej normy (D3 – niedobór częściowy lub
+      całkowity), histologia niewykonana (P13 = nie wykonano) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [D5, '=', ujemna]
+        - [D3, in, [częściowy, całkowity]]
+        - [P13, '=', nie wykonano]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Celiakia niepotwierdzona. Ujemne testy IgG mają mniejszą czułość i nie wykluczają
+      celiakii; przy całkowitym niedoborze IgA i objawach złego wchłaniania wskazana biopsja.
+      Gdy testy IgG i biopsja są niejednoznaczne albo biopsja jest niemożliwa, można rozważyć
+      HLA-DQ2/DQ8 (jeśli nie badano) – wynik ujemny wyklucza celiakię.
+    source:
+      ref: esscd1
+      location: Q.II.6 – zalecenie i uzasadnienie (s. 1868)
+      page: 1868
+      kind: zalecenie
+    ptge:
+      status: zgodność
+      pages: [10]
+
+  - id: G4-04
+    name: dieta ograniczona – HLA przed prowokacją
+    group: G4
+    level: rekomendacja
+    uses: [P2, P3, P4, P9, P13, P15, P16]
+    condition_text: >-
+      spożycie glutenu ograniczone (P2), prowokacja niezakończona (P16 = nie), HLA niebadane
+      (P15) i jedno z: serologia nie dodatnia (anty-TG2 IgA brak lub ujemne – D1, IgG nie
+      dodatnie – P9) albo histologia Marsh 0–1 (P13)
+    condition:
+      all:
+        - [P2, '=', ograniczone]
+        - [P16, '=', false]
+        - [P15, '=', nie badano]
+        - any:
+            - all:
+                - [D1, in, [brak, ujemny]]
+                - [P9, ≠, dodatni]
+            - [P13, in, ['0', '1']]
+    conclusion: >-
+      Przed ewentualną prowokacją glutenem oznacz HLA-DQ2/DQ8 – wynik ujemny wyklucza celiakię
+      i prowokacja nie jest potrzebna. Poprawa objawów po ograniczeniu glutenu ani ich nawrót
+      po jego powrocie nie są podstawą rozpoznania.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – zalecenie i kluczowe uwagi (s. 1875); Q.IV.5 (s. 1874); Q.IV.1.3 (s. 1870)
+      page: 1875
+      kind: zalecenie
+      grade: {certainty: niska, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [11, 12]
+
+  - id: G4-05
+    name: HLA-DQ2/DQ8 ujemne przy niedodatniej serologii – celiakia wykluczona
+    group: G4
+    level: rekomendacja
+    uses: [P3, P4, P7, P8, P9, P15]
+    condition_text: >-
+      HLA-DQ2/DQ8 ujemne (P15), serologia swoista nie jest dodatnia (D5 – ujemna lub
+      nieustalona) i anty-TG2 IgA nie jest dodatnie (brak P3 lub P3 ≤ P4)
+    condition:
+      all:
+        - [P15, '=', ujemny]
+        - [D5, ≠, dodatnia]
+        - [D1, in, [brak, ujemny]]
+    conclusion: >-
+      Brak HLA-DQ2/DQ8 praktycznie wyklucza celiakię – dalsza diagnostyka w kierunku celiakii,
+      w tym prowokacja glutenem, nie jest potrzebna. Przy zmianach w dwunastnicy szukaj innych
+      przyczyn.
+    source:
+      ref: esscd1
+      location: Q.IV.8, kluczowe uwagi (s. 1875); uzasadnienie Q.II.6 (s. 1868); uzasadnienie Q.IV.4 i tab. 3 (s. 1873); Q.IV.5 (s. 1874)
+      page: 1875
+      kind: zalecenie
+    ptge:
+      status: zgodność
+      pages: [12]
+
+  - id: G4-06
+    name: dieta ograniczona, HLA dodatnie – prowokacja glutenem
+    group: G4
+    level: rekomendacja
+    basis: ptge
+    uses: [P2, P3, P4, P9, P13, P15, P16]
+    condition_text: >-
+      spożycie glutenu ograniczone (P2), prowokacja niezakończona (P16 = nie), HLA-DQ2/DQ8
+      dodatnie (P15) i jedno z: serologia nie dodatnia (anty-TG2 IgA brak lub ujemne – D1, IgG
+      nie dodatnie – P9) albo histologia Marsh 0–1 (P13)
+    condition:
+      all:
+        - [P2, '=', ograniczone]
+        - [P16, '=', false]
+        - [P15, '=', dodatni]
+        - any:
+            - all:
+                - [D1, in, [brak, ujemny]]
+                - [P9, ≠, dodatni]
+            - [P13, in, ['0', '1']]
+    conclusion: >-
+      Wskazana prowokacja glutenem pod nadzorem gastroenterologa, po omówieniu z pacjentem
+      wskazań, przebiegu i możliwych wyników. Wg PTG-E: 10 g glutenu na dobę przez co najmniej
+      6–8 tygodni; przy znacznym nasileniu objawów można rozważyć 3 g na dobę przez 2
+      tygodnie. Serologię można wykonać już po 2 tygodniach, a jeśli jest ujemna – powtórzyć
+      po kolejnych 6 tygodniach (8 tygodni od powrotu glutenu). ESsCD: co najmniej 3 g na dobę
+      przez 6 tygodni. Rozważ wsparcie dietetyka. Gdy serologia w trakcie jest dodatnia albo
+      schemat się zakończył, zaznacz P16 = tak i wpisz wyniki.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – zalecenie, kluczowe uwagi (s. 1875) i uzasadnienie (s. 1876)
+      page: 1875
+      kind: zalecenie
+      grade: {certainty: niska, strength: silne, agreement: 100}
+    ptge:
+      status: różnica
+      pages: [11, 12]
+
+  - id: G4-07
+    name: dieta ograniczona bez serologii – najpierw anty-TG2 IgA
+    group: G4
+    level: informacja
+    uses: [P2, P3, P9, P15, P16]
+    condition_text: >-
+      spożycie glutenu ograniczone (P2), prowokacja niezakończona (P16 = nie), brak wyniku
+      anty-TG2 IgA (P3), IgG nie dodatnie (P9 ≠ dodatni) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [P2, '=', ograniczone]
+        - [P16, '=', false]
+        - [P3, '=', null]
+        - [P9, ≠, dodatni]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Algorytm ESsCD dla pacjentów na diecie bezglutenowej zaczyna się od oznaczenia anty-TG2
+      IgA: wynik dodatni pozwala ustalić rozpoznanie według zwykłych zasad (z biopsją lub
+      bez), ujemny kieruje do HLA-DQ2/DQ8 i prowokacji. Zmiany serologiczne i histologiczne
+      mogą się utrzymywać, jeśli dietę stosowano krótko (1–3 miesiące).
+    source:
+      ref: esscd1
+      location: uzasadnienie Q.IV.8 i ryc. 2 (s. 1876–1877)
+      page: 1876
+      kind: uzasadnienie
+    ptge:
+      status: różnica
+      pages: [11]
+
+  - id: G4-08
+    name: po prowokacji, serologia dodatnia – biopsja
+    group: G4
+    level: rekomendacja
+    basis: ptge
+    uses: [P3, P4, P7, P8, P9, P13, P16]
+    condition_text: >-
+      prowokacja zakończona (P16 = tak), histologia niewykonana (P13 = nie wykonano) i
+      serologia swoista dodatnia (D5)
+    condition:
+      all:
+        - [P16, '=', true]
+        - [P13, '=', nie wykonano]
+        - [D5, '=', dodatnia]
+    conclusion: >-
+      Po prowokacji glutenem serologia jest dodatnia – wskazana gastroduodenoskopia z
+      pobraniem wycinków i oceną histopatologiczną; histologia jest preferowanym punktem
+      końcowym prowokacji.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – kluczowe uwagi (s. 1875) i uzasadnienie (s. 1876)
+      page: 1875
+      kind: zalecenie
+    ptge:
+      status: różnica
+      pages: [11]
+
+  - id: G4-09
+    name: po prowokacji, wysokie miano – serologia jako zamiennik histologii wg ESsCD
+    group: G4
+    level: informacja
+    basis: ptge
+    uses: [P3, P4, P7, P13, P15, P16]
+    condition_text: >-
+      prowokacja zakończona (P16 = tak), histologia niewykonana (P13 = nie wykonano), wysokie
+      miano anty-TG2 IgA (D2), brak całkowitego niedoboru IgA (P7) i HLA nie ujemne (P15 ≠
+      ujemny)
+    condition:
+      all:
+        - [P16, '=', true]
+        - [P13, '=', nie wykonano]
+        - [D2, '=', true]
+        - [D3, ≠, całkowity]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Według ESsCD przy anty-TG2 IgA ≥ 10 × GGN po prowokacji serologię można uznać za
+      zamiennik potwierdzenia histologicznego; PTG-E zaleca w tej sytuacji endoskopię. ESsCD
+      nie określa, czy wtedy obowiązują warunki ścieżki bez biopsji (wiek < 45 lat, brak
+      objawów alarmowych). Decyzja należy do lekarza.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – kluczowe uwagi (s. 1875) i uzasadnienie (s. 1876)
+      page: 1875
+      kind: zalecenie
+    ptge:
+      status: różnica
+      pages: [11]
+
+  - id: G4-10
+    name: po prowokacji, serologia niedodatnia – serologia i biopsja
+    group: G4
+    level: rekomendacja
+    uses: [P3, P4, P7, P8, P9, P13, P15, P16]
+    condition_text: >-
+      prowokacja zakończona (P16 = tak), histologia niewykonana (P13 = nie wykonano),
+      serologia swoista nie jest dodatnia (D5 – ujemna lub nieustalona) i HLA nie ujemne (P15
+      ≠ ujemny)
+    condition:
+      all:
+        - [P16, '=', true]
+        - [P13, '=', nie wykonano]
+        - [D5, ≠, dodatnia]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Uzupełnij serologię, jeśli jej brak (anty-TG2 IgA z IgA całkowitym), i wykonaj
+      gastroduodenoskopię z pobraniem co najmniej 4 wycinków z części zstępującej dwunastnicy
+      oraz 1–2 z opuszki – histologia jest preferowanym punktem końcowym prowokacji, a
+      serologia ma znaczenie uzupełniające. Według PTG-E przy ujemnej serologii nadal należy
+      rozważyć endoskopię w ramach różnicowania objawów lub nieprawidłowości.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – kluczowe uwagi (s. 1875); Q.III.1 (s. 1868)
+      page: 1875
+      kind: zalecenie
+    ptge:
+      status: zgodność
+      pages: [11]
+
+  - id: G4-11
+    name: po prowokacji, histologia bez serologii – oznacz serologię
+    group: G4
+    level: rekomendacja
+    uses: [P3, P7, P9, P13, P15, P16]
+    condition_text: >-
+      prowokacja zakończona (P16 = tak), histologia wykonana (P13 ≠ nie wykonano), brak wyniku
+      anty-TG2 IgA (P3), serologia swoista nieustalona (D5) i HLA nie ujemne (P15 ≠ ujemny)
+    condition:
+      all:
+        - [P16, '=', true]
+        - [P13, ≠, nie wykonano]
+        - [P3, '=', null]
+        - [D5, '=', nieustalona]
+        - [P15, ≠, ujemny]
+    conclusion: >-
+      Oznacz anty-TG2 IgA z IgA całkowitym – interpretacja wyniku histopatologicznego wymaga
+      wyniku serologii.
+    source:
+      ref: esscd1
+      location: Q.IV.8 – kluczowe uwagi (s. 1875); Q.IV.1.1 (s. 1870)
+      page: 1875
+      kind: zalecenie
+      grade: {certainty: wysoka, strength: silne, agreement: 100}
+    ptge:
+      status: zgodność
+      pages: [11]

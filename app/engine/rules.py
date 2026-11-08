@@ -28,6 +28,7 @@ REQUIRED_KEYS = {
     "group",
     "level",
     "uses",
+    "condition_text",
     "condition",
     "conclusion",
     "source",
@@ -89,6 +90,7 @@ class Rule:
     level: Level
     basis: str | None
     uses: tuple[str, ...]
+    condition_text: str
     condition: Node
     conclusion: str
     source: Source
@@ -313,6 +315,7 @@ def _parse_rule(raw: object, group: str, sources: Mapping[str, Reference]) -> Ru
         level=Level(raw["level"]),
         basis=raw.get("basis"),
         uses=uses,
+        condition_text=_text(raw, "condition_text"),
         condition=condition,
         conclusion=_text(raw, "conclusion"),
         source=_parse_source(raw["source"], sources),

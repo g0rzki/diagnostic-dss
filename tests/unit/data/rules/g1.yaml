@@ -4,6 +4,9 @@ rules:
     group: G1
     level: rekomendacja
     uses: [P2, P3, P7, P15]
+    condition_text: >-
+      brak wyniku anty-TG2 IgA (P3), spożycie glutenu normalne (P2), brak stwierdzonego
+      całkowitego niedoboru IgA (D3) i HLA nie ujemne (P15 ≠ ujemny)
     condition:
       all:
         - [P3, '=', null]

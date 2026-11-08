@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from sqlalchemy import URL
 
@@ -16,6 +17,7 @@ def database_url(database):
 
 class Config:
     SQLALCHEMY_DATABASE_URI = database_url(os.environ.get("POSTGRES_DB", "dss"))
+    RULES_DIR = Path(__file__).resolve().parent / "rules"
 
 
 class TestConfig(Config):

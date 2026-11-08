@@ -4,6 +4,10 @@ rules:
     group: G4
     level: rekomendacja
     uses: [P2, P3, P4, P9, P13, P15, P16]
+    condition_text: >-
+      spożycie glutenu ograniczone (P2), prowokacja niezakończona (P16 = nie), HLA niebadane
+      (P15) i jedno z: serologia nie dodatnia (anty-TG2 IgA brak lub ujemne – D1, IgG nie
+      dodatnie – P9) albo histologia Marsh 0–1 (P13)
     condition:
       all:
         - [P2, '=', ograniczone]
@@ -33,6 +37,9 @@ rules:
     group: G4
     level: rekomendacja
     uses: [P3, P7, P9, P13, P15, P16]
+    condition_text: >-
+      prowokacja zakończona (P16 = tak), histologia wykonana (P13 ≠ nie wykonano), brak wyniku
+      anty-TG2 IgA (P3), serologia swoista nieustalona (D5) i HLA nie ujemne (P15 ≠ ujemny)
     condition:
       all:
         - [P16, '=', true]
