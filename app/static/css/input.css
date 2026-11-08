@@ -1,1 +1,16 @@
 @import "tailwindcss" source("../../templates");
+
+@layer components {
+  .btn-primary,
+  .btn-secondary {
+    @apply inline-block rounded border px-5 py-2 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply border-teal-700 bg-teal-700 text-white hover:bg-teal-800;
+  }
+
+  .btn-secondary {
+    @apply border-teal-700 bg-white text-teal-800 hover:bg-teal-50;
+  }
+}

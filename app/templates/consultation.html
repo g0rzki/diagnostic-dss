@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% from "_macros.html" import code_badge %}
+
+{% block title %}Konsultacja | Diagnostic DSS{% endblock %}
+
+{% macro choice(name, options, current) %}
+  <div class="mt-2 flex flex-wrap gap-x-5 gap-y-2">
+    {% for option in options %}
+      <label class="inline-flex items-center gap-2">
+        <input type="radio" name="{{ name }}" value="{{ option }}" class="accent-teal-700"
+               {% if current == option %}checked{% endif %}>
+        <span>{{ option }}</span>
+      </label>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro text_input(name, current, invalid) %}
+  <input type="text" inputmode="decimal" id="{{ name }}" name="{{ name }}" value="{{ current or '' }}"
+         {% if invalid %}aria-invalid="true"{% endif %}
+         class="w-40 rounded border px-2 py-1 focus:outline-none {{ 'border-red-500' if invalid else 'border-slate-300 focus:border-teal-600' }}">
+{% endmacro %}
+
+{% macro title(param) %}{{ param.label[:1] | upper }}{{ param.label[1:] }}{% endmacro %}
+
+{% macro field(param) %}
+  {% set condition = param.required_if %}
+  {% set messages = errors.get(param.id, []) %}
+  <div data-field
+       {% if condition %}
+         data-show-param="{{ condition.param }}"
+         data-show-op="{{ condition.op.value }}"
+         data-show-value="{{ condition.value or '' }}"
+       {% endif %}>
+    {% if param.type.value in ("enum", "bool", "int_pair") %}
+      <fieldset>
+        <legend class="font-medium">{{ title(param) }} {{ code_badge(param.id, tips[param.id]) }}</legend>
+        {% if param.type.value == "enum" %}
+          {{ choice(param.id, param.values, values.get(param.id)) }}
+        {% elif param.type.value == "bool" %}
+          {{ choice(param.id, ("tak", "nie"), values.get(param.id)) }}
+        {% else %}
+          <div class="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+            {% for part in param.parts %}
+              {% set name = param.id ~ "_" ~ part %}
+              <div class="flex items-center gap-2">
+                <label for="{{ name }}" class="text-sm text-slate-500">{{ part }}</label>
+                {{ text_input(name, values.get(name), messages) }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </fieldset>
+    {% else %}
+      <div class="flex items-center gap-2">
+        <label for="{{ param.id }}" class="font-medium">{{ title(param) }}</label>
+        {{ code_badge(param.id, tips[param.id]) }}
+      </div>
+      <div class="mt-2 flex items-center gap-2">
+        {{ text_input(param.id, values.get(param.id), messages) }}
+        {% if param.unit %}<span class="text-sm text-slate-500">{{ param.unit }}</span>{% endif %}
+      </div>
+    {% endif %}
+    {% if hints[param.id] %}
+      <p class="mt-1 text-sm text-slate-500">{{ hints[param.id] }}</p>
+    {% endif %}
+    {% for message in messages %}
+      <p class="mt-1 text-sm text-red-700">{{ message }}</p>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold">Konsultacja</h1>
+<p class="mt-2 text-slate-500">
+  Dorosły pacjent z podejrzeniem celiakii lub z grupy ryzyka, przed ustaleniem rozpoznania.
+  Wpisz dane, które są już znane. Brak wyniku badania jest dopuszczalny, system wskaże kolejny krok.
+  Kody P1–P17 przy polach oznaczają dane używane w regułach. Najedź na kod, aby zobaczyć opis.
+</p>
+
+{% if errors %}
+  <div class="mt-6 rounded border border-red-200 bg-red-50 p-4 text-red-800">
+    Formularz zawiera błędy. Popraw zaznaczone pola.
+    {% for message in other_errors %}<p class="mt-1">{{ message }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" action="{{ url_for('main.consultation_result') }}" class="mt-6 space-y-6" novalidate>
+  {% for section in sections %}
+    <section class="rounded-lg border border-slate-200 bg-white px-6 py-5 shadow-sm">
+      <h2 class="text-lg font-semibold text-teal-800">{{ section.title }}</h2>
+      <div class="mt-4 flex flex-col gap-6">
+        {% for param in section.fields %}{{ field(param) }}{% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+  <div class="flex items-center justify-end gap-3">
+    <a href="{{ url_for('main.consultation_form') }}" class="btn-secondary">Wyczyść</a>
+    <button type="submit" class="btn-primary">Oceń</button>
+  </div>
+</form>
+
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+{% endblock %}
