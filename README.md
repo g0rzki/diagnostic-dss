@@ -26,21 +26,86 @@ Prototyp nie zastępuje decyzji lekarza i nie jest przeznaczony do użytku klini
 
 Pierwsza wersja systemu dotyczy diagnostyki celiakii u dorosłego pacjenta (≥ 18 lat) z podejrzeniem choroby lub z grupy ryzyka, przed ustaleniem rozpoznania. Lekarz wpisuje dane, które są już znane (wywiad, serologia, histopatologia, HLA). Niepełne dane są normalnym stanem diagnostyki: system wskazuje kolejny krok na podstawie dostępnych wyników.
 
-Baza wiedzy:
+Poza zakresem są diagnostyka u dzieci, leczenie i monitorowanie chorych z ustalonym rozpoznaniem.
 
-| Element | Liczba |
-|---|---|
-| dane wejściowe (P1–P17) | 17 |
-| wartości wyliczane (D1–D9) | 11 (D1 i D2 także dla drugiej próbki) |
-| reguły | 45 w czterech grupach: G1 serologia wstępna (7), G2 ścieżka bez biopsji (10), G3 biopsja i histologia (17), G4 sytuacje szczególne (11) |
-| poziomy komunikatów | rekomendacja (29), ostrzeżenie (4), informacja (12) |
+---
 
-Źródła wiedzy:
+## Baza wiedzy
 
-- **ESsCD 2025 cz. 1**: Al-Toma i wsp. European Society for the Study of Coeliac Disease 2025 Updated Guidelines on the Diagnosis and Management of Coeliac Disease in Adults. Part 1: Diagnostic Approach. United European Gastroenterology Journal 2025;13(10):1855–1886. doi:10.1002/ueg2.70119
-- **PTG-E 2026**: Gawron-Kiszka i wsp. Wytyczne postępowania w celiakii – rekomendacje Sekcji Jelitowej Polskiego Towarzystwa Gastroenterologii. Gastroenterology Review 2026;21(3). doi:10.5114/pg.2026.164973
+Baza wiedzy składa się z danych wejściowych (kody P), wartości wyliczanych przez system (kody D) i reguł (kody G). Warunek każdej reguły jest zapisany na danych wejściowych i wartościach wyliczanych.
 
-Warunki reguł i oceny GRADE pochodzą z ESsCD. Gdy wytyczne się różnią, kierunek reguły wyznacza PTG-E, a stanowisko ESsCD jest podane we wniosku reguły.
+### Dane wejściowe
+
+| Kod | Dana | Wartości | Wymagana |
+|---|---|---|---|
+| P1 | wiek | liczba całkowita 18–120 [lata] | tak |
+| P2 | spożycie glutenu w okresie badań | normalne / ograniczone | tak |
+| P3 | anty-TG2 IgA, wynik 1 | liczba > 0 | nie |
+| P4 | GGN laboratorium dla wyniku 1 | liczba > 0 | gdy podano P3 |
+| P5 | anty-TG2 IgA, wynik 2 (druga próbka) | liczba > 0 | nie |
+| P6 | GGN laboratorium dla wyniku 2 | liczba > 0 | gdy podano P5 |
+| P7 | IgA całkowite | liczba ≥ 0 [g/L] | nie |
+| P8 | dolna granica normy IgA całkowitego | liczba > 0,07 [g/L] | gdy podano P7 |
+| P9 | testy IgG (anty-TG2 IgG / anty-DGP IgG) | dodatni / ujemny / nie wykonano | tak |
+| P10 | objawy złego wchłaniania sugerujące celiakię | tak / nie | tak |
+| P11 | objawy alarmowe | tak / nie | tak |
+| P12 | zgoda pacjenta na ścieżkę bez biopsji | nie omówiono / tak / nie | tak |
+| P13 | stopień Marsha | nie wykonano / 0 / 1 / 2 / 3 | tak |
+| P14 | liczba wycinków (część dalsza dwunastnicy, opuszka) | dwie liczby całkowite ≥ 0 | gdy P13 ≠ nie wykonano |
+| P15 | HLA-DQ2/DQ8 | dodatni / ujemny / nie badano | tak |
+| P16 | prowokacja glutenem zakończona (wg zaleconego schematu) | tak / nie | gdy P2 = ograniczone |
+| P17 | krewny 1. stopnia z celiakią | tak / nie | tak |
+
+GGN to górna granica normy podana przez laboratorium. Krotność GGN liczy system, lekarz wpisuje wynik i granicę z wydruku.
+
+### Wartości wyliczane
+
+| Kod | Wartość | Definicja |
+|---|---|---|
+| D1, D1_2 | anty-TG2 IgA (wynik 1, wynik 2) | dodatni, gdy wynik > GGN; ujemny, gdy wynik ≤ GGN |
+| D2, D2_2 | wysokie miano anty-TG2 IgA (wynik 1, wynik 2) | wynik ≥ 10 × GGN |
+| D3 | IgA całkowite | niedobór całkowity (< 0,07 g/L), niedobór częściowy (poniżej dolnej granicy normy) albo norma |
+| D4 | ścieżka bez biopsji dostępna | wysokie miano, wiek < 45 lat, brak objawów alarmowych, dieta z glutenem, histologia niewykonana, brak całkowitego niedoboru IgA, HLA nie ujemne |
+| D5 | status serologii swoistej | dodatnia, ujemna albo nieustalona (z anty-TG2 IgA, IgA całkowitego i testów IgG) |
+| D6 | niskie miano anty-TG2 IgA | GGN < wynik < 10 × GGN, bez całkowitego niedoboru IgA |
+| D7 | wystarczająca liczba wycinków | co najmniej 4 z części dalszej i co najmniej 1 z opuszki |
+| D8 | spożycie glutenu wystarczające do oceny | dieta z glutenem albo zakończona prowokacja glutenem |
+| D9 | ścieżka bez biopsji w toku | ścieżka dostępna, pacjent nie odmówił, druga próbka nie jest ujemna |
+
+Pełne definicje są w słowniku oznaczeń w aplikacji (`/slownik`) i w `app/engine/derived.py`.
+
+### Reguły
+
+| Grupa | Zakres | Rekomendacje | Ostrzeżenia | Informacje | Razem |
+|---|---|---|---|---|---|
+| G1 serologia wstępna | badania pierwszego rzutu, badanie krewnych, ograniczony gluten, niedobór IgA przed testami IgG, ujemny wynik przed biopsją | 3 | 1 | 3 | 7 |
+| G2 ścieżka bez biopsji | anty-TG2 IgA ≥ 10 × GGN przed histologią: warunki wstępne, zgoda pacjenta, druga próbka, sytuacje bez zastosowania | 7 | 0 | 3 | 10 |
+| G3 biopsja i histologia | wskazanie do biopsji, protokół wycinków, stopień Marsha w zestawieniu z serologią, czynniki zaniżające obraz histologiczny | 11 | 3 | 3 | 17 |
+| G4 sytuacje szczególne | niedobór IgA po testach IgG, dieta ograniczona (HLA, prowokacja), stan po prowokacji, wykluczenie przez ujemne HLA | 8 | 0 | 3 | 11 |
+| **Razem** | | **29** | **4** | **12** | **45** |
+
+Poziomy komunikatów:
+
+- **rekomendacja** wskazuje kolejny krok diagnostyczny albo wniosek diagnostyczny;
+- **ostrzeżenie** sygnalizuje czynnik, który może zafałszować wynik;
+- **informacja** pokazuje niejednoznaczność lub rozbieżność źródeł albo opcję do rozważenia; decyzja należy do lekarza.
+
+Każda reguła ma źródło w ESsCD (miejsce w wytycznych ze stroną, rodzaj fragmentu i ocenę GRADE, jeśli jest przypisana; 24 reguły mają ocenę GRADE) oraz status zgodności z PTG-E: zgodność (30 reguł), różnica (13), brak odniesienia (2). Przy 9 z 13 reguł z różnicą kierunek reguły wyznacza PTG-E. Pozostałe 4 to trzy reguły informacyjne, które pokazują rozbieżność (G1-04, G2-09, G4-07), i G4-02, gdzie stanowisko PTG-E wynika tylko z ryciny, więc kierunek pochodzi z ESsCD.
+
+### Weryfikacja bazy wiedzy
+
+- Każda reguła opiera się na dosłownych cytatach z wytycznych. Wszystkie 288 cytatów sprawdzono automatycznie w tekście plików PDF na wskazanej stronie. Katalog wiedzy z cytatami jest przechowywany poza repozytorium; w repozytorium są reguły w postaci wykonywalnej.
+- Silnik reguł uruchomiono na 2 628 288 stanach, czyli na wszystkich kombinacjach kategorii wyników i wartości progowych: żadna para reguł nie daje przeciwstawnych wniosków, a stan bez żadnej reguły występuje tylko przy danych fizjologicznie niespójnych (dodatnie anty-TG2 IgA przy IgA całkowitym < 0,07 g/L), które sygnalizuje walidacja formularza.
+- Dla każdej reguły są przypadki testowe, w których reguła się uruchamia i w których milczy (192 przypadki w `tests/unit/data/catalog_cases.yaml`), sprawdzane przy każdym uruchomieniu testów.
+
+### Źródła wiedzy
+
+| Źródło | Opis bibliograficzny | Rola w systemie |
+|---|---|---|
+| ESsCD 2025 cz. 1 | Al-Toma A. i wsp. European Society for the Study of Coeliac Disease 2025 Updated Guidelines on the Diagnosis and Management of Coeliac Disease in Adults. Part 1: Diagnostic Approach. *United European Gastroenterology Journal* 2025;13(10):1855–1886. [doi:10.1002/ueg2.70119](https://doi.org/10.1002/ueg2.70119) | warunki reguł i oceny GRADE; strony według paginacji czasopisma |
+| PTG-E 2026 | Gawron-Kiszka M. i wsp. Wytyczne postępowania w celiakii – rekomendacje Sekcji Jelitowej Polskiego Towarzystwa Gastroenterologii. *Gastroenterology Review* 2026;21(3). [doi:10.5114/pg.2026.164973](https://doi.org/10.5114/pg.2026.164973) | zgodność z zaleceniami krajowymi, kierunek części reguł przy rozbieżności źródeł, polska terminologia; strony według numeracji artykułu |
+
+Kierunek reguły pochodzi z ESsCD. Wyjątkiem są reguły oznaczone w słowniku „kierunek reguły według PTG-E”: przy rozbieżności źródeł przyjęto w nich stanowisko PTG-E.
 
 ---
 
@@ -59,11 +124,13 @@ Stan realizacji jest opisany w sekcji [Status projektu](#status-projektu).
 
 ## Korzystanie z aplikacji
 
-| Adres | Strona |
+Po uruchomieniu (sekcja [Uruchomienie](#uruchomienie)) aplikacja działa lokalnie pod adresem http://localhost:8000.
+
+| Ścieżka | Strona |
 |---|---|
-| http://localhost:8000 | strona startowa |
-| http://localhost:8000/konsultacja | formularz konsultacji |
-| http://localhost:8000/slownik | słownik oznaczeń: dane wejściowe, wartości wyliczane, reguły ze stronami źródeł |
+| `/` | strona startowa |
+| `/konsultacja` | formularz konsultacji |
+| `/slownik` | słownik oznaczeń: dane wejściowe, wartości wyliczane, reguły ze stronami źródeł |
 
 Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Najechanie na kod (P1, G2-01 itd.) pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
 
@@ -190,7 +257,7 @@ Opis zmiennych znajduje się w pliku `.env.example`.
 
 ---
 
-## Baza reguł
+## Pliki reguł
 
 Reguły są zapisane w plikach `app/rules/g1.yaml`…`g4.yaml`, po jednym na grupę. Każda reguła zawiera:
 

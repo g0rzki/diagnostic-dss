@@ -47,7 +47,7 @@ SOURCE_ROLES = {
         "Źródło warunków reguł i ocen siły zaleceń (GRADE). Strony według paginacji czasopisma."
     ),
     "ptge": (
-        "Zgodność z zaleceniami krajowymi, kierunek reguły przy rozbieżności źródeł i polska "
+        "Zgodność z zaleceniami krajowymi, kierunek części reguł przy rozbieżności źródeł i polska "
         "terminologia. Strony według numeracji artykułu."
     ),
 }
