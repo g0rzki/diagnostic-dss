@@ -146,9 +146,8 @@ def validate(raw: Mapping[str, object]) -> ValidationResult:
             invalid.add(param.id)
             errors.append(Issue(param.id, f"{param.label}: {error}"))
 
+    inactive: set[str] = set()
     for param in PARAMETERS.values():
-        if param.id in invalid:
-            continue
         condition = param.required_if
         if condition is not None:
             if condition.param in invalid or (
@@ -157,9 +156,13 @@ def validate(raw: Mapping[str, object]) -> ValidationResult:
                 continue
             if not _condition_met(condition, values):
                 values[param.id] = None
+                inactive.add(param.id)
                 continue
+        if param.id in invalid:
+            continue
         if (param.required or condition is not None) and values[param.id] is None:
             errors.append(Issue(param.id, f"{param.label}: wartość wymagana"))
+    errors = [issue for issue in errors if issue.field not in inactive]
 
     if values["P5"] is not None and values["P3"] is None and "P3" not in invalid:
         errors.append(Issue("P5", "wynik drugiej próbki wymaga wyniku pierwszego oznaczenia"))

@@ -167,6 +167,28 @@ def test_gluten_challenge_is_dropped_on_normal_diet():
     assert result.values["P16"] is None
 
 
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"P4": "abc"},
+        {"P6": "0"},
+        {"P8": "0,05"},
+        {"P14_dalsza": "x"},
+        {"P16": "może"},
+    ],
+)
+def test_invalid_value_of_inactive_field_is_ignored(changes):
+    result = validate(form(**changes))
+
+    assert result.is_valid
+    field = next(iter(changes)).split("_")[0]
+    assert result.values[field] is None
+
+
+def test_invalid_value_of_active_field_is_rejected():
+    assert error_fields(validate(form(P7="1,5", P8="0,05"))) == ["P8"]
+
+
 def test_second_sample_without_first_result_is_rejected():
     assert error_fields(validate(form(P5="20", P6="10"))) == ["P5"]
 
