@@ -18,7 +18,16 @@ System łączy dwa podejścia:
 - **reguły eksperckie** oparte na wytycznych klinicznych, jawne i możliwe do prześledzenia,
 - **model uczenia maszynowego**, który uzupełnia reguły tam, gdzie wytyczne nie dają jednoznacznej odpowiedzi.
 
-Prototyp nie zastępuje decyzji lekarza i nie jest przeznaczony do użytku klinicznego.
+### Charakter prototypu
+
+System jest prototypem badawczym przygotowanym w ramach pracy inżynierskiej.
+
+- Zgodność reguł z wytycznymi została zweryfikowana: cytaty w plikach PDF, przypadki testowe każdej reguły i przegląd wszystkich kombinacji kategorii wyników (sekcja [Weryfikacja bazy wiedzy](#weryfikacja-bazy-wiedzy)).
+- System nie przeszedł walidacji klinicznej, czyli oceny na danych rzeczywistych pacjentów, i nie jest przeznaczony do użytku klinicznego.
+- System nie jest wprowadzany do obrotu jako wyrób medyczny i nie ma oznakowania CE. Oprogramowanie, które dostarcza informacji wykorzystywanych w decyzjach diagnostycznych, przy użyciu klinicznym podlegałoby rozporządzeniu (UE) 2017/745 w sprawie wyrobów medycznych (MDR) jako wyrób co najmniej klasy IIa (reguła 11 załącznika VIII).
+- Baza wiedzy odpowiada wytycznym ESsCD 2025 i PTG-E 2026. Zmiana wytycznych wymaga przeglądu reguł.
+- W obecnej wersji konsultacje nie są zapisywane.
+- Decyzję diagnostyczną zawsze podejmuje lekarz.
 
 ---
 
@@ -94,9 +103,9 @@ Każda reguła ma źródło w ESsCD (miejsce w wytycznych ze stroną, rodzaj fra
 
 ### Weryfikacja bazy wiedzy
 
-- Każda reguła opiera się na dosłownych cytatach z wytycznych. Wszystkie 288 cytatów sprawdzono automatycznie w tekście plików PDF na wskazanej stronie. Katalog wiedzy z cytatami jest przechowywany poza repozytorium; w repozytorium są reguły w postaci wykonywalnej.
+- Każda reguła opiera się na dosłownych cytatach z wytycznych. Wszystkie 288 cytatów porównano skryptem weryfikującym z tekstem plików PDF na wskazanej stronie. Katalog wiedzy z cytatami jest przechowywany poza repozytorium; w repozytorium są reguły w postaci wykonywalnej.
 - Silnik reguł uruchomiono na 2 628 288 stanach, czyli na wszystkich kombinacjach kategorii wyników i wartości progowych: żadna para reguł nie daje przeciwstawnych wniosków, a stan bez żadnej reguły występuje tylko przy danych fizjologicznie niespójnych (dodatnie anty-TG2 IgA przy IgA całkowitym < 0,07 g/L), które sygnalizuje walidacja formularza.
-- Dla każdej reguły są przypadki testowe, w których reguła się uruchamia i w których milczy (192 przypadki w `tests/unit/data/catalog_cases.yaml`), sprawdzane przy każdym uruchomieniu testów.
+- Dla każdej reguły są przypadki testowe, w których reguła się uruchamia i w których milczy (257 przypadków w `tests/unit/data/catalog_cases.yaml`), sprawdzane przy każdym uruchomieniu testów. Przypadki są dobrane tak, że pominięcie dowolnego członu warunku zmienia wynik co najmniej jednego z nich. Wyjątkiem jest 8 członów, które wynikają z pozostałych członów tej samej reguły.
 
 ### Źródła wiedzy
 
@@ -132,7 +141,18 @@ Po uruchomieniu (sekcja [Uruchomienie](#uruchomienie)) aplikacja działa lokalni
 | `/konsultacja` | formularz konsultacji |
 | `/slownik` | słownik oznaczeń: dane wejściowe, wartości wyliczane, reguły ze stronami źródeł |
 
-Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Najechanie na kod (P1, G2-01 itd.) pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
+Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Każde pole i każda reguła mają kod (P1, G2-01 itd.) w wyróżnionej plakietce: najechanie na kod pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
+
+Nad formularzem są cztery przykładowe scenariusze. Każdy wypełnia formularz danymi typowej sytuacji i pokazuje ścieżkę, którą przechodzi system, oczekiwany wynik oraz zmiany danych prowadzące do innych reguł:
+
+| Scenariusz | Co pokazuje | Wynik |
+|---|---|---|
+| Rozpoznanie bez biopsji | wysokie miano, zgoda pacjenta, dodatnia druga próbka | G2-03 |
+| Biopsja przy niskim mianie | Marsh 2 przy niskim mianie, rozbieżność ESsCD i PTG-E | G3-07 |
+| Całkowity niedobór IgA | niedobór IgA, ujemne testy IgG, objawy złego wchłaniania | G4-02, G4-03 |
+| Pacjent na diecie bezglutenowej | ograniczony gluten, ujemna serologia, dodatnie HLA | G4-06, ostrzeżenie G1-02 |
+
+Opis ścieżki jest widoczny także na stronie wyniku, dopóki dane przykładu nie zostaną zmienione. Scenariusze są zdefiniowane w `app/scenarios.py`, a testy sprawdzają, że każdy daje opisany wynik.
 
 Przykładowe dane (pola nie wymienione zostają z wartościami domyślnymi):
 
@@ -191,6 +211,7 @@ app/
     engine.py        ocena reguł dla danych pacjenta
   rules/             baza reguł: g1.yaml…g4.yaml, sources.yaml
   forms.py           układ formularza, wartości domyślne, podpowiedzi
+  scenarios.py       przykładowe scenariusze wypełniające formularz
   glossary.py        treść słownika oznaczeń i podpowiedzi przy kodach
   routes.py          trasy (adresy URL)
   templates/         szablony HTML
@@ -274,6 +295,7 @@ condition:
   all:
     - [D4, '=', true]
     - [P12, '=', nie omówiono]
+    - [D1_2, '≠', ujemny]
 ```
 
 Pliki reguł są wczytywane i sprawdzane przy starcie aplikacji: nieznane pola, wartości spoza listy, niezgodność `uses` z warunkiem i inne błędy zatrzymują start z listą wszystkich problemów. Po zmianie plików reguł trzeba zrestartować backend:
