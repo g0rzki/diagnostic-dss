@@ -1,12 +1,20 @@
-{% macro code_badge(code, tip) %}
-  <span class="group relative inline-block shrink-0 align-middle">
+{% macro code_badge(code, tip, tip_id=none) -%}
+  {% set tip_id = tip_id or "tip-" ~ code -%}
+  <span class="group relative inline-flex shrink-0 align-middle">
     <a href="{{ url_for('main.glossary') }}#{{ code }}" target="_blank" rel="noopener"
-       aria-describedby="tip-{{ code }}"
-       class="whitespace-nowrap rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-normal text-slate-600 hover:bg-brand-light hover:text-brand-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">{{ code }}</a>
-    <span id="tip-{{ code }}" role="tooltip"
+       aria-describedby="{{ tip_id }}"
+       class="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-brand/40 bg-brand-light px-2 py-0.5 font-mono text-xs font-semibold text-brand-dark hover:border-brand hover:bg-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+      {{- code -}}
+      <svg viewBox="0 0 16 16" class="h-3.5 w-3.5" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="8" cy="4.75" r="1" fill="currentColor"/>
+        <rect x="7.25" y="7" width="1.5" height="5" rx="0.75" fill="currentColor"/>
+      </svg>
+    </a>
+    <span id="{{ tip_id }}" role="tooltip"
           class="pointer-events-none absolute bottom-full left-0 z-10 mb-2 hidden w-72 whitespace-normal rounded bg-slate-800 px-3 py-2 text-xs font-normal leading-snug text-white shadow-lg sm:group-hover:block sm:group-focus-within:block">
       {{ tip }}
       <span class="mt-1 block text-slate-300">Kliknij, aby otworzyć słownik oznaczeń w nowej karcie.</span>
     </span>
   </span>
-{% endmacro %}
+{%- endmacro %}
