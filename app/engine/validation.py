@@ -1,12 +1,14 @@
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from app.engine.parameters import PARAMETERS, Condition, Op, Parameter, ParamType
 
 TOTAL_IGA_DEFICIENCY = Decimal("0.07")
 BOUND_PREFIX_PARAMS = ("P3", "P5")
 BOOL_VALUES = {"tak": True, "nie": False}
+NUMBER = re.compile(r"-?(?:[0-9]{1,9}(?:[.,][0-9]*)?|[.,][0-9]+)")
 
 
 @dataclass(frozen=True)
@@ -40,13 +42,9 @@ def _to_decimal(param: Parameter, raw: object) -> Decimal:
     text = str(raw).strip()
     if param.id in BOUND_PREFIX_PARAMS:
         text = text.lstrip("<>").strip()
-    try:
-        number = Decimal(text.replace(",", "."))
-    except InvalidOperation:
-        raise InvalidValue("wymagana liczba") from None
-    if not number.is_finite():
+    if not NUMBER.fullmatch(text):
         raise InvalidValue("wymagana liczba")
-    return number
+    return Decimal(text.replace(",", "."))
 
 
 def _to_int(param: Parameter, raw: object) -> int:

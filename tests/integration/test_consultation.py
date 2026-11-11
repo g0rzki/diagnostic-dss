@@ -38,6 +38,15 @@ def test_invalid_form_is_shown_again_with_errors_and_entered_values(client):
     assert 'value="abc"' in page
 
 
+def test_form_banner_lists_only_errors_without_their_own_field(client):
+    page = submit(client, P1="", P18="tak").get_data(as_text=True)
+    banner = page.split("Formularz zawiera błędy")[1].split("</div>")[0]
+
+    assert "nieznane pole: P18" in banner
+    assert "wiek: wartość wymagana" not in banner
+    assert "wiek: wartość wymagana" in page
+
+
 def test_restricted_diet_requires_gluten_challenge_answer(client):
     response = submit(client, P2="ograniczone")
 
@@ -45,6 +54,13 @@ def test_restricted_diet_requires_gluten_challenge_answer(client):
     assert "prowokacja glutenem zakończona (wg zaleconego schematu): wartość wymagana" in (
         response.get_data(as_text=True)
     )
+
+
+def test_number_in_exponent_notation_is_rejected_without_server_error(client):
+    response = submit(client, P3="1", P4="1e999999")
+
+    assert response.status_code == 422
+    assert "GGN laboratorium dla wyniku 1: wymagana liczba" in response.get_data(as_text=True)
 
 
 def test_inconsistent_results_are_shown_as_warning(client):

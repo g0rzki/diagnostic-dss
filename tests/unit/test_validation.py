@@ -41,7 +41,9 @@ def test_age_range_is_18_to_120(age, valid):
     assert validate(form(P1=age)).is_valid is valid
 
 
-@pytest.mark.parametrize("age", ["abc", "30,5", "30.5", True, "NaN", "Infinity"])
+@pytest.mark.parametrize(
+    "age", ["abc", "30,5", "30.5", True, "NaN", "Infinity", "3e1", "+30", "３０", "1 000"]
+)
 def test_age_must_be_an_integer(age):
     assert error_fields(validate(form(P1=age))) == ["P1"]
 
@@ -51,6 +53,18 @@ def test_decimal_comma_and_dot_are_accepted():
 
     assert result.values["P3"] == Decimal("12.5")
     assert result.values["P4"] == Decimal("10")
+
+
+@pytest.mark.parametrize("limit", ["1e999999", "10e0", "1000000000", "1" * 10**6])
+def test_number_in_exponent_notation_or_with_ten_digits_is_rejected(limit):
+    assert error_fields(validate(form(P3="20", P4=limit))) == ["P4"]
+
+
+@pytest.mark.parametrize(
+    "raw, expected", [("0,5", "0.5"), (",5", "0.5"), ("5,", "5"), ("123456789", "123456789")]
+)
+def test_plain_number_notation_is_accepted(raw, expected):
+    assert validate(form(P3=raw, P4="10")).values["P3"] == Decimal(expected)
 
 
 def test_float_input_keeps_exact_decimal_value():
@@ -73,7 +87,11 @@ def test_total_iga_may_be_zero():
 
 
 def test_total_iga_must_not_be_negative():
-    assert error_fields(validate(form(P7="-0,1", P8="0,7"))) == ["P7"]
+    result = validate(form(P7="-0,1", P8="0,7"))
+
+    assert [issue.message for issue in result.errors] == [
+        "IgA całkowite: wartość nie może być mniejsza niż 0"
+    ]
 
 
 @pytest.mark.parametrize("limit, valid", [("0,07", False), ("0,08", True)])
@@ -206,6 +224,18 @@ def test_positive_iga_antibody_with_total_iga_deficiency_gives_warning():
 
     assert result.is_valid
     assert [issue.field for issue in result.warnings] == ["P3"]
+
+
+def test_inconsistent_results_warning_text():
+    result = validate(form(P3="20", P4="10", P7="0,05", P8="0,7"))
+
+    assert [issue.message for issue in result.warnings] == [
+        "wyniki niespójne: dodatnie anty-TG2 IgA przy IgA całkowitym < 0,07 g/L, sprawdź wyniki"
+    ]
+
+
+def test_positive_iga_antibody_at_0_07_total_iga_gives_no_warning():
+    assert validate(form(P3="20", P4="10", P7="0,07", P8="0,7")).warnings == ()
 
 
 def test_antibody_equal_to_limit_with_total_iga_deficiency_gives_no_warning():
