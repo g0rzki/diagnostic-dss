@@ -3,13 +3,15 @@ rules:
     name: ścieżka bez biopsji możliwa – omów z pacjentem
     group: G2
     level: rekomendacja
-    uses: [P1, P2, P3, P4, P7, P11, P12, P13, P15]
+    uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
     condition_text: >-
-      ścieżka bez biopsji dostępna (D4) i zgoda pacjenta nieomówiona (P12 = nie omówiono)
+      ścieżka bez biopsji dostępna (D4), zgoda pacjenta nieomówiona (P12 = nie omówiono) i druga
+      próbka nie ujemna (brak P5 lub P5 > P6)
     condition:
       all:
         - [D4, '=', true]
         - [P12, '=', nie omówiono]
+        - [D1_2, '≠', ujemny]
     conclusion: >-
       Spełnione są warunki wstępne ścieżki bez biopsji (anty-TG2 IgA ≥ 10 × GGN, wiek < 45
       lat, brak objawów alarmowych, dieta z glutenem). Omów z pacjentem korzyści i
@@ -113,12 +115,12 @@ rules:
     level: rekomendacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
     condition_text: >-
-      ścieżka bez biopsji dostępna (D4), zgoda pacjenta (P12 = tak) i druga próbka ujemna
-      (P5 ≤ P6)
+      ścieżka bez biopsji dostępna (D4), pacjent nie odmówił ścieżki bez biopsji (P12 ≠ nie) i
+      druga próbka ujemna (P5 ≤ P6)
     condition:
       all:
         - [D4, '=', true]
-        - [P12, '=', tak]
+        - [P12, '≠', nie]
         - [D1_2, '=', ujemny]
     conclusion: >-
       Druga próbka nie potwierdziła wyniku – rozpoznanie bez biopsji nie jest możliwe.
