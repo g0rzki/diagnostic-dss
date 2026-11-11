@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, request
+from flask import Blueprint, abort, current_app, render_template, request
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -17,6 +17,7 @@ from app.glossary import (
     rules_by_group,
     source_entries,
 )
+from app.scenarios import BY_SLUG, SCENARIOS, matching_scenario
 
 bp = Blueprint("main", __name__)
 
@@ -29,6 +30,14 @@ LEVEL_TITLES = (
 
 def rule_base():
     return current_app.extensions["rule_base"]
+
+
+def all_rule_tips():
+    return {rule.id: rule_tip(rule) for rule in rule_base().rules}
+
+
+def all_rule_names():
+    return {rule.id: rule.name[:1].upper() + rule.name[1:] for rule in rule_base().rules}
 
 
 @bp.get("/")
@@ -48,13 +57,22 @@ def render_form(values, errors=(), status=200):
         values=values,
         errors=errors_by_field,
         other_errors=[issue.message for issue in errors if issue.field not in PARAMETERS],
+        scenarios=SCENARIOS,
+        scenario=matching_scenario(values),
+        rule_tips=all_rule_tips(),
+        rule_names=all_rule_names(),
     )
     return page, status
 
 
 @bp.get("/konsultacja")
 def consultation_form():
-    return render_form(INTERVIEW_DEFAULTS)
+    slug = request.args.get("przyklad")
+    if slug is None:
+        return render_form(INTERVIEW_DEFAULTS)
+    if slug not in BY_SLUG:
+        abort(404)
+    return render_form(BY_SLUG[slug].values)
 
 
 @bp.post("/konsultacja")
@@ -68,8 +86,10 @@ def consultation_result():
         result=result,
         levels=LEVEL_TITLES,
         warnings=validation.warnings,
-        rule_tips={rule.id: rule_tip(rule) for rule in result.fired},
+        rule_tips=all_rule_tips(),
+        rule_names=all_rule_names(),
         submitted=request.form,
+        scenario=matching_scenario(request.form),
     )
 
 

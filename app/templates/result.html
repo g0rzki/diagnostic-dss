@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import code_badge %}
+{% from "_scenario.html" import scenario_panel %}
 
 {% block title %}Wynik konsultacji | Diagnostic DSS{% endblock %}
 
@@ -13,6 +14,8 @@
 <p class="mt-2 text-slate-500">
   Komunikaty wynikające z reguł bazy wiedzy dla wpisanych danych. Najedź na kod reguły, aby zobaczyć jej grupę i poziom.
 </p>
+
+{% if scenario %}{{ scenario_panel(scenario, rule_tips, rule_names, true) }}{% endif %}
 
 {% if warnings %}
   <div class="mt-6 rounded border border-red-200 bg-red-50 p-4 text-red-800">

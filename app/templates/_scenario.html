@@ -1,0 +1,39 @@
+{% from "_macros.html" import code_badge %}
+
+{% macro scenario_panel(scenario, rule_tips, rule_names, after_evaluation) %}
+  <section class="mt-6 rounded-lg border border-brand/40 bg-brand-light px-6 py-5">
+    <p class="text-sm font-medium text-brand-dark">Przykładowy scenariusz</p>
+    <h2 class="text-lg font-semibold">{{ scenario.title }}</h2>
+    <p class="mt-1">{{ scenario.summary }}</p>
+
+    <h3 class="mt-4 font-medium">Ścieżka w systemie</h3>
+    <ol class="mt-2 list-decimal space-y-1 pl-5">
+      {% for step in scenario.path %}<li>{{ step }}</li>{% endfor %}
+    </ol>
+
+    <h3 class="mt-4 font-medium">Wynik</h3>
+    <ul class="mt-2 space-y-1">
+      {% for code in scenario.expected %}
+        <li class="flex items-center gap-2">
+          {{ code_badge(code, rule_tips[code], "tip-scenario-" ~ code) }}
+          <span>{{ rule_names[code] }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="mt-4 font-medium">Sprawdź też</h3>
+    <ul class="mt-2 list-disc space-y-1 pl-5">
+      {% for variant in scenario.variants %}
+        <li>{{ variant.change }}: wynik {{ variant.expected | join(", ") }}</li>
+      {% endfor %}
+    </ul>
+
+    <p class="mt-4 text-sm text-slate-600">
+      {% if after_evaluation %}
+        Aby zmienić dane, kliknij <strong>Popraw dane</strong> na dole strony.
+      {% else %}
+        Formularz poniżej jest wypełniony danymi przykładu. Kliknij <strong>Oceń</strong> na dole formularza albo najpierw zmień dane.
+      {% endif %}
+    </p>
+  </section>
+{% endmacro %}

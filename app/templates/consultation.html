@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import code_badge %}
+{% from "_scenario.html" import scenario_panel %}
 
 {% block title %}Konsultacja | Diagnostic DSS{% endblock %}
 
@@ -75,8 +76,27 @@
 <p class="mt-2 text-slate-500">
   Dorosły pacjent z podejrzeniem celiakii lub z grupy ryzyka, przed ustaleniem rozpoznania.
   Wpisz dane, które są już znane. Brak wyniku badania jest dopuszczalny, system wskaże kolejny krok.
-  Kody P1–P17 przy polach oznaczają dane używane w regułach. Najedź na kod, aby zobaczyć opis.
 </p>
+
+<section class="mt-6 rounded-lg border border-slate-200 bg-white px-6 py-5 shadow-sm">
+  <h2 class="text-lg font-semibold text-brand">Przykładowe scenariusze</h2>
+  <p class="mt-1 text-sm text-slate-500">
+    Wybierz przykład, aby wypełnić formularz danymi typowej sytuacji diagnostycznej.
+    Nad formularzem pojawi się opis ścieżki, którą przechodzi system.
+  </p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    {% for item in scenarios %}
+      <a href="{{ url_for('main.consultation_form', przyklad=item.slug) }}"
+         {% if scenario and scenario.slug == item.slug %}aria-current="true"{% endif %}
+         class="block rounded border px-4 py-3 hover:border-brand hover:bg-brand-light focus:outline-none focus-visible:ring-2 focus-visible:ring-brand {{ 'border-brand bg-brand-light' if scenario and scenario.slug == item.slug else 'border-slate-300' }}">
+        <span class="block font-medium text-brand-dark">{{ loop.index }}. {{ item.title }}</span>
+        <span class="mt-1 block text-sm text-slate-600">{{ item.summary }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if scenario %}{{ scenario_panel(scenario, rule_tips, rule_names, false) }}{% endif %}
 
 {% if errors %}
   <div class="mt-6 rounded border border-red-200 bg-red-50 p-4 text-red-800">
@@ -84,6 +104,18 @@
     {% for message in other_errors %}<p class="mt-1">{{ message }}</p>{% endfor %}
   </div>
 {% endif %}
+
+<div class="mt-6 flex gap-3 rounded-lg border border-brand/40 bg-brand-light px-5 py-4">
+  <div>
+    <p class="font-medium text-brand-dark">Kody przy polach</p>
+    <p class="mt-1 text-sm">
+      Każde pole ma kod, np. {{ code_badge("P3", tips["P3"], "tip-legend-P3") }}, który łączy je z bazą wiedzy.
+      Najedź na kod, aby zobaczyć opis pola, dopuszczalne wartości i liczbę reguł, które z niego
+      korzystają. Kliknięcie otwiera słownik oznaczeń w nowej karcie, a wpisane dane zostają.
+      Na telefonie dotknięcie kodu od razu otwiera słownik.
+    </p>
+  </div>
+</div>
 
 <form method="post" action="{{ url_for('main.consultation_result') }}" class="mt-6 space-y-6" novalidate>
   {% for section in sections %}
