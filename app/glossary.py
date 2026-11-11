@@ -81,6 +81,22 @@ DEFINITIONS = {
 }
 
 
+CODE = re.compile(r"\b(?:P\d{1,2}|D\d(?:_2)?|G\d-\d{2})\b")
+
+
+def code_segments(text: str) -> tuple[tuple[str, bool], ...]:
+    segments = []
+    position = 0
+    for match in CODE.finditer(text):
+        if match.start() > position:
+            segments.append((text[position : match.start()], False))
+        segments.append((match.group(), True))
+        position = match.end()
+    if position < len(text):
+        segments.append((text[position:], False))
+    return tuple(segments)
+
+
 def rules_phrase(count: int) -> str:
     return "1 reguły" if count == 1 else f"{count} reguł"
 
@@ -103,6 +119,10 @@ class RuleEntry:
     source: str
     ptge: str
 
+    @property
+    def condition_parts(self) -> tuple[tuple[str, bool], ...]:
+        return code_segments(self.rule.condition_text)
+
 
 @dataclass(frozen=True)
 class SourceEntry:
@@ -119,6 +139,10 @@ class DerivedEntry:
     definition: str
     reads: tuple[str, ...]
     rules: tuple[str, ...]
+
+    @property
+    def definition_parts(self) -> tuple[tuple[str, bool], ...]:
+        return code_segments(self.definition[:1].upper() + self.definition[1:])
 
 
 def _number(value) -> str:

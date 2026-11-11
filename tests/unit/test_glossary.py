@@ -7,11 +7,13 @@ from app.engine.rules import load_rules
 from app.glossary import (
     DEFINITIONS,
     GROUPS,
+    code_segments,
     derived_entries,
     parameter_entries,
     parameter_tips,
     ptge_text,
     required_text,
+    rules_by_group,
     rules_phrase,
     source_entries,
     source_text,
@@ -119,9 +121,52 @@ def test_ptge_text(base, rule_id, expected):
     assert ptge_text(rule(base, rule_id)) == expected
 
 
+def test_rules_are_listed_in_their_own_group(base):
+    groups = rules_by_group(base)
+
+    assert [group for group, *_ in groups] == ["G1", "G2", "G3", "G4"]
+    assert [len(entries) for *_, entries in groups] == [7, 10, 17, 11]
+    assert all(entry.rule.group == group for group, *_, entries in groups for entry in entries)
+
+
 def test_every_source_has_role_and_doi(base):
     entries = source_entries(base)
 
     assert [entry.name for entry in entries] == ["ESsCD 2025 cz. 1", "PTG-E 2026"]
     assert [entry.doi for entry in entries] == ["10.1002/ueg2.70119", "10.5114/pg.2026.164973"]
     assert all(entry.role and not entry.citation.endswith("doi:") for entry in entries)
+
+
+def test_code_segments_mark_codes_in_text():
+    assert code_segments("ścieżka (D4) i P12 = tak") == (
+        ("ścieżka (", False),
+        ("D4", True),
+        (") i ", False),
+        ("P12", True),
+        (" = tak", False),
+    )
+    assert code_segments("jak D1_2, bez G3-03") == (
+        ("jak ", False),
+        ("D1_2", True),
+        (", bez ", False),
+        ("G3-03", True),
+    )
+    assert code_segments("HLA-DQ2/DQ8 ujemne") == (("HLA-DQ2/DQ8 ujemne", False),)
+
+
+def test_every_code_in_conditions_and_definitions_has_a_glossary_entry(base):
+    known = {*PARAMETERS, *DERIVED, *(rule.id for rule in base.rules)}
+    texts = [rule.condition_text for rule in base.rules] + [
+        e.definition for e in derived_entries(base)
+    ]
+
+    for text in texts:
+        for fragment, is_code in code_segments(text):
+            assert not is_code or fragment in known, (fragment, text)
+
+
+def test_segments_join_back_to_the_original_text(base):
+    for rule in base.rules:
+        assert (
+            "".join(part for part, _ in code_segments(rule.condition_text)) == rule.condition_text
+        )
