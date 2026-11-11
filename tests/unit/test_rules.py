@@ -7,6 +7,7 @@ import yaml
 from app.engine.rules import AllOf, AnyOf, Comparison, Level, RuleFileError, load_rules
 
 SAMPLE = Path(__file__).parent / "data" / "rules"
+HLA_NEGATIVE = ["P15", "=", "ujemny"]
 
 
 def copy_sample(tmp_path, change=None):
@@ -118,6 +119,7 @@ def set_key(key, value):
         (replace_comparison(3, ["P1", "<", None]), "wymaga liczby"),
         (replace_comparison(3, {"all": []}), "niepustej listy warunków"),
         (replace_comparison(3, {"not": [["P15", "=", "ujemny"]]}), "nieprawidłowy warunek"),
+        (replace_comparison(3, {"all": [HLA_NEGATIVE], "any": [HLA_NEGATIVE]}), "nieprawidłowy"),
     ],
 )
 def test_invalid_rule_is_rejected(tmp_path, change, expected):
@@ -199,6 +201,7 @@ def test_group_file_without_rules_list_is_rejected(tmp_path):
     "sources, expected",
     [
         ([], "wymagany słownik źródeł"),
+        ({}, "wymagany słownik źródeł"),
         ({"esscd1": {"name": "ESsCD"}}, "wymagane pola name i citation"),
         ({"esscd1": {"name": "ESsCD", "citation": ""}}, "niepustym tekstem"),
     ],
@@ -212,6 +215,14 @@ def test_invalid_sources_file_is_rejected(tmp_path, sources, expected):
     assert len(found) == 1
     assert found[0].startswith("sources.yaml: ")
     assert expected in found[0]
+
+
+@pytest.mark.parametrize("agreement", [0, 100])
+def test_agreement_from_0_to_100_is_accepted(tmp_path, agreement):
+    def change(files):
+        first_rule(files)["source"]["grade"]["agreement"] = agreement
+
+    assert load_rules(copy_sample(tmp_path, change)).rules[0].source.grade.agreement == agreement
 
 
 def test_missing_sources_file_is_rejected(tmp_path):

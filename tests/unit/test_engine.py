@@ -41,6 +41,7 @@ def fired_ids(result):
         (Comparison("P16", "≠", True), True),
         (Comparison("P2", "in", ("normalne", "ograniczone")), True),
         (Comparison("P1", "<", Decimal(45)), True),
+        (Comparison("P1", "<", Decimal(30)), False),
         (Comparison("P1", "≥", Decimal(30)), True),
         (Comparison("P1", "≥", Decimal(31)), False),
         (Comparison("P3", "<", Decimal(10)), False),
