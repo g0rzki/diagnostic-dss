@@ -6,14 +6,43 @@
   <p class="mt-2 text-slate-500">
     Rekomendacje diagnostyczne oparte na regułach eksperckich i danych pacjenta.
   </p>
-  <p class="mt-4 text-sm text-slate-500">
-    Prototyp badawczy. Reguły odtwarzają wytyczne ESsCD 2025 i PTG-E 2026, a ich zgodność ze
-    źródłami sprawdzono automatycznie. System nie przeszedł walidacji klinicznej i nie jest
-    przeznaczony do użytku klinicznego. Decyzję diagnostyczną zawsze podejmuje lekarz.
+
+  <div class="mt-6 grid gap-6 sm:grid-cols-3">
+    <div>
+      <h2 class="font-semibold text-brand">Celiakia</h2>
+      <p class="mt-1 text-sm">
+        Przewlekła, immunologiczna enteropatia wywoływana przez spożycie glutenu u osób
+        genetycznie predysponowanych. W krajach zachodnich dotyczy około 1% populacji, a znaczna
+        część przypadków pozostaje nierozpoznana.
+      </p>
+    </div>
+    <div>
+      <h2 class="font-semibold text-brand">Co robi system</h2>
+      <p class="mt-1 text-sm">
+        Prowadzi diagnostykę celiakii u dorosłego pacjenta. Na podstawie znanych już wyników
+        (wywiad, serologia, histopatologia, HLA) wskazuje kolejny krok diagnostyczny albo
+        wniosek i zwraca uwagę na czynniki, które mogą zafałszować wyniki, na przykład dietę
+        bezglutenową lub niedobór IgA.
+      </p>
+    </div>
+    <div>
+      <h2 class="font-semibold text-brand">Co łączy</h2>
+      <p class="mt-1 text-sm">
+        Dane konkretnego pacjenta z zaleceniami dwóch wytycznych: europejskich ESsCD 2025
+        i polskich PTG-E 2026. Kierunek reguł pochodzi z ESsCD, a gdzie źródła się różnią,
+        system przyjmuje stanowisko PTG-E albo pokazuje oba i zostawia decyzję lekarzowi. Każdy
+        komunikat wskazuje regułę, której źródło opisuje słownik.
+      </p>
+    </div>
+  </div>
+
+  <p class="mt-6 text-sm text-slate-500">
+    Prototyp badawczy. System nie przeszedł walidacji klinicznej i nie jest przeznaczony do użytku
+    klinicznego. Decyzję diagnostyczną zawsze podejmuje lekarz.
   </p>
-  <a href="{{ url_for('main.consultation_form') }}"
-     class="btn-primary mt-4">
-    Nowa konsultacja
-  </a>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <a href="{{ url_for('main.consultation_form') }}" class="btn-primary">Nowa konsultacja</a>
+    <a href="{{ url_for('main.glossary') }}" class="btn-secondary">Słownik oznaczeń</a>
+  </div>
 </section>
 {% endblock %}
