@@ -252,7 +252,7 @@ rules:
     uses: [P3, P4, P7, P13, P15, P16]
     condition_text: >-
       prowokacja zakończona (P16 = tak), histologia niewykonana (P13 = nie wykonano), wysokie
-      miano anty-TG2 IgA (D2), brak całkowitego niedoboru IgA (P7) i HLA nie ujemne (P15 ≠
+      miano anty-TG2 IgA (D2), brak całkowitego niedoboru IgA (D3) i HLA nie ujemne (P15 ≠
       ujemny)
     condition:
       all:

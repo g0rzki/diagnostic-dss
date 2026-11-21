@@ -282,7 +282,7 @@ rules:
     uses: [P3, P4, P7, P13, P15]
     condition_text: >-
       histologia Marsh 0 lub 1 (P13), wysokie miano anty-TG2 IgA (D2), brak całkowitego
-      niedoboru IgA (P7) i HLA nie ujemne (P15 ≠ ujemny)
+      niedoboru IgA (D3) i HLA nie ujemne (P15 ≠ ujemny)
     condition:
       all:
         - [P13, in, ['0', '1']]
