@@ -43,8 +43,9 @@ SCENARIOS = (
         },
         path=(
             "Anty-TG2 IgA 150 przy GGN 10 to 15 × GGN, czyli wysokie miano (D2).",
-            "Wiek poniżej 45 lat, brak objawów alarmowych, dieta z glutenem, IgA całkowite "
-            "w normie i HLA nie ujemne: ścieżka bez biopsji jest dostępna (D4).",
+            "Wiek poniżej 45 lat, brak objawów alarmowych, dieta z glutenem, brak całkowitego "
+            "niedoboru IgA, histologii nie wykonano i HLA nie jest ujemne: ścieżka bez biopsji "
+            "jest dostępna (D4).",
             "Pacjent wyraził zgodę (P12), a druga próbka 120 przy GGN 10 jest dodatnia (D1_2).",
             "Ścieżka jest w toku (D9), więc protokół biopsji (G3-03) się nie pojawia.",
         ),
@@ -74,8 +75,9 @@ SCENARIOS = (
             "(G3-03).",
             "Pobrano 4 wycinki z części dalszej i 1 z opuszki, czyli wystarczająco (D7).",
             "Marsh 2 przy niskim mianie: zalecenie ESsCD uznaje rozpoznanie za potwierdzone, "
-            "a PTG-E opisuje szarą strefę. Kierunek reguły pochodzi z PTG-E, stanowisko ESsCD "
-            "jest podane we wniosku.",
+            "a uzasadnienie ESsCD nazywa ten stan szarą strefą. PTG-E zaleca w pierwszej "
+            "kolejności ocenić spożycie glutenu. Kierunek reguły pochodzi z PTG-E, stanowisko "
+            "zalecenia ESsCD jest podane we wniosku.",
         ),
         expected=("G3-07",),
         variants=(
