@@ -103,7 +103,7 @@ def _parse_pair(param: Parameter, raw: Mapping[str, object]) -> tuple[int, ...] 
     return numbers
 
 
-def _condition_met(condition: Condition, values: Mapping[str, object]) -> bool:
+def condition_met(condition: Condition, values: Mapping[str, object]) -> bool:
     value = values[condition.param]
     if condition.op is Op.GIVEN:
         return value is not None
@@ -152,7 +152,7 @@ def validate(raw: Mapping[str, object]) -> ValidationResult:
                 condition.op is not Op.GIVEN and values[condition.param] is None
             ):
                 continue
-            if not _condition_met(condition, values):
+            if not condition_met(condition, values):
                 values[param.id] = None
                 inactive.add(param.id)
                 continue

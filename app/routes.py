@@ -6,6 +6,7 @@ from app.engine.engine import run
 from app.engine.parameters import PARAMETERS
 from app.engine.rules import Level
 from app.engine.validation import validate
+from app.explanation import explain
 from app.extensions import db
 from app.forms import HINTS, INTERVIEW_DEFAULTS, SECTIONS
 from app.glossary import (
@@ -80,10 +81,15 @@ def consultation_result():
     validation = validate(request.form)
     if not validation.is_valid:
         return render_form(request.form, validation.errors, 422)
-    result = run(rule_base(), validation.values)
+    base = rule_base()
+    result = run(base, validation.values)
     return render_template(
         "result.html",
         result=result,
+        explanations={
+            rule.id: explain(base, rule, validation.values, result.derived) for rule in result.fired
+        },
+        ptge_name=base.sources["ptge"].name,
         levels=LEVEL_TITLES,
         warnings=validation.warnings,
         rule_tips=all_rule_tips(),
