@@ -123,7 +123,7 @@ Kierunek reguły pochodzi z ESsCD. Wyjątkiem są reguły oznaczone w słowniku 
 - Formularz do wprowadzania danych pacjenta
 - Moduł reguł eksperckich przetwarzający dane wejściowe
 - Generowanie rekomendacji diagnostycznych wraz z wyjaśnieniem, które reguły zadziałały i z jakiego źródła pochodzą
-- Możliwość dodawania i modyfikowania reguł bez ingerencji w kod
+- Reguły zapisane jako dane (pliki YAML) oddzielone od kodu i sprawdzane przy starcie aplikacji
 - Komponent uczenia maszynowego jako uzupełnienie podejścia regułowego (regresja logistyczna, drzewa decyzyjne)
 - Prezentacja wyników w przejrzystej formie webowej
 
@@ -141,7 +141,7 @@ Po uruchomieniu (sekcja [Uruchomienie](#uruchomienie)) aplikacja działa lokalni
 | `/konsultacja` | formularz konsultacji |
 | `/slownik` | słownik oznaczeń: dane wejściowe, wartości wyliczane, reguły ze stronami źródeł |
 
-Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Każde pole i każda reguła mają kod (P1, G2-01 itd.) w wyróżnionej plakietce: najechanie na kod pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
+Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. Pod każdym komunikatem można rozwinąć uzasadnienie: warunek reguły, wartości wpisane i wyliczone, które go spełniły, miejsce w ESsCD ze stroną i oceną GRADE oraz zgodność z PTG-E. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Każde pole i każda reguła mają kod (P1, G2-01 itd.) w wyróżnionej plakietce: najechanie na kod pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
 
 Nad formularzem są cztery przykładowe scenariusze. Każdy wypełnia formularz danymi typowej sytuacji i pokazuje ścieżkę, którą przechodzi system, oczekiwany wynik oraz zmiany danych prowadzące do innych reguł:
 
@@ -171,7 +171,7 @@ System zbudowany jest w podejściu warstwowym:
 
 - **Warstwa prezentacji**: interfejs webowy (szablony Jinja2, Tailwind CSS)
 - **Warstwa logiki biznesowej**: aplikacja Flask, silnik reguł eksperckich, integracja modeli ML
-- **Warstwa danych**: PostgreSQL (dane pacjentów, reguły eksperckie)
+- **Warstwa danych**: pliki reguł YAML (baza wiedzy), PostgreSQL (historia konsultacji)
 
 Przepływ konsultacji: formularz → walidacja danych → wartości wyliczane → ocena reguł → strona wyniku.
 
@@ -213,6 +213,7 @@ app/
   forms.py           układ formularza, wartości domyślne, podpowiedzi
   scenarios.py       przykładowe scenariusze wypełniające formularz
   glossary.py        treść słownika oznaczeń i podpowiedzi przy kodach
+  explanation.py     uzasadnienie reguły na stronie wyniku
   routes.py          trasy (adresy URL)
   templates/         szablony HTML
   static/css/        style (input.css: źródło, output.css: budowany automatycznie)
@@ -375,10 +376,9 @@ Projekt jest w trakcie realizacji (praca inżynierska 2026/2027).
 - [x] Baza wiedzy: 45 reguł diagnostyki celiakii u dorosłych, zweryfikowanych z wytycznymi ESsCD 2025 i PTG-E 2026
 - [x] Silnik reguł eksperckich, walidacja danych i formularz konsultacji
 - [x] Strona wyniku i słownik oznaczeń
-- [ ] Pełne uzasadnienie reguły przy wyniku (warunek, źródło, ocena GRADE, wpisane i wyliczone dane)
-- [ ] Przechowywanie reguł i historii konsultacji w bazie danych
+- [x] Uzasadnienie reguły przy wyniku (warunek, wpisane i wyliczone dane, źródło, ocena GRADE)
+- [ ] Historia konsultacji w bazie danych
 - [ ] Komponent uczenia maszynowego i łączenie wyników
-- [ ] Panel zarządzania regułami
 - [ ] Ewaluacja systemu
 
 ---
