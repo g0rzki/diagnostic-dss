@@ -72,7 +72,9 @@ rules:
         - [P15, ≠, ujemny]
     conclusion: >-
       Całkowity niedobór IgA – serologia w klasie IgA jest niewiarygodna (wynik ujemny może
-      być fałszywie ujemny). Zleć serologię w klasie IgG (anty-TG2 IgG lub anty-DGP IgG).
+      być fałszywie ujemny). Zleć serologię w klasie IgG (anty-TG2 IgG lub anty-DGP IgG). Przy
+      objawach złego wchłaniania i diecie zawierającej gluten wskazana jest gastroduodenoskopia z
+      pobraniem wycinków niezależnie od wyniku testów IgG (jeśli jej nie wykonano).
     source:
       ref: esscd1
       location: Q.II.6 (zalecenie) + uzasadnienie
