@@ -1,4 +1,5 @@
-from collections.abc import Mapping
+import hashlib
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import Enum
@@ -107,6 +108,7 @@ class Reference:
 class RuleBase:
     sources: dict[str, Reference]
     rules: tuple[Rule, ...]
+    version: str
 
 
 class RuleFileError(Exception):
@@ -342,6 +344,14 @@ def _load_sources(path: Path) -> dict[str, Reference]:
     return sources
 
 
+def rules_version(paths: Iterable[Path]) -> str:
+    manifest = "".join(
+        f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n"
+        for path in sorted(paths, key=lambda path: path.name)
+    )
+    return hashlib.sha256(manifest.encode()).hexdigest()
+
+
 def load_rules(directory: Path) -> RuleBase:
     problems: list[str] = []
     try:
@@ -383,4 +393,4 @@ def load_rules(directory: Path) -> RuleBase:
 
     if problems:
         raise RuleFileError(problems)
-    return RuleBase(sources, tuple(rules))
+    return RuleBase(sources, tuple(rules), rules_version([directory / "sources.yaml", *files]))

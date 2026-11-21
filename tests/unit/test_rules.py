@@ -1,3 +1,5 @@
+import hashlib
+import shutil
 from decimal import Decimal
 from pathlib import Path
 
@@ -236,3 +238,39 @@ def test_rule_id_must_start_with_group_of_its_file(tmp_path):
     found = problems(copy_sample(tmp_path, set_key("id", "G2-01")))
 
     assert found == ["g1.yaml: G2-01: id: musi zaczynać się od G1-"]
+
+
+def copy_files(tmp_path):
+    return shutil.copytree(SAMPLE, tmp_path / "rules")
+
+
+def test_version_is_checksum_of_rule_file_checksums_as_listed_by_sha256sum():
+    listing = "".join(
+        f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n"
+        for path in sorted(SAMPLE.glob("*.yaml"))
+    )
+
+    assert load_rules(SAMPLE).version == hashlib.sha256(listing.encode()).hexdigest()
+
+
+def test_version_depends_on_file_contents_not_on_directory(tmp_path):
+    assert load_rules(copy_files(tmp_path)).version == load_rules(SAMPLE).version
+
+
+@pytest.mark.parametrize("name", ["g1.yaml", "g2.yaml", "g4.yaml", "sources.yaml"])
+def test_version_changes_when_any_rule_file_changes(tmp_path, name):
+    directory = copy_files(tmp_path)
+    with (directory / name).open("a", encoding="utf-8") as file:
+        file.write("# zmiana bez wpływu na treść reguł\n")
+
+    base = load_rules(directory)
+
+    assert len(base.rules) == 5
+    assert base.version != load_rules(SAMPLE).version
+
+
+def test_files_outside_rule_base_do_not_change_version(tmp_path):
+    directory = copy_files(tmp_path)
+    (directory / "notatki.yaml").write_text("szkic: true\n", encoding="utf-8")
+
+    assert load_rules(directory).version == load_rules(SAMPLE).version
