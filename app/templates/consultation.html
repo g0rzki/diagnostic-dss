@@ -118,6 +118,27 @@
 </div>
 
 <form method="post" action="{{ url_for('main.consultation_result') }}" class="mt-6 space-y-6" novalidate>
+  {% set label_errors = errors.get("oznaczenie", []) %}
+  <section class="rounded-lg border border-slate-200 bg-white px-6 py-5 shadow-sm">
+    <h2 class="text-lg font-semibold text-brand">Historia przypadku</h2>
+    <div class="mt-4">
+      <label for="oznaczenie" class="font-medium">Oznaczenie przypadku</label>
+      <span class="text-sm text-slate-500">(opcjonalne)</span>
+      <div class="mt-2">
+        <input type="text" id="oznaczenie" name="oznaczenie" value="{{ values.get('oznaczenie') or '' }}"
+               maxlength="30" autocomplete="off" {% if label_errors %}aria-invalid="true"{% endif %}
+               class="w-56 rounded border px-2 py-1 focus:outline-none {{ 'border-red-500' if label_errors else 'border-slate-300 focus:border-brand' }}">
+      </div>
+      <p class="mt-1 text-sm text-slate-500">
+        Z oznaczeniem, np. P-001, każdy wynik zapisuje się w przebiegu diagnostyki tego przypadku.
+        Nie wpisuj imienia, nazwiska ani numeru PESEL. W wersji demonstracyjnej historia jest wspólna
+        dla wszystkich odwiedzających.
+      </p>
+      {% for message in label_errors %}
+        <p class="mt-1 text-sm text-red-700">{{ message }}</p>
+      {% endfor %}
+    </div>
+  </section>
   {% for section in sections %}
     <section class="rounded-lg border border-slate-200 bg-white px-6 py-5 shadow-sm">
       <h2 class="text-lg font-semibold text-brand">{{ section.title }}</h2>
