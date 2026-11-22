@@ -109,6 +109,16 @@ def test_demo_case_is_read_only(demo_app):
     assert "Przypadek pokazowy jest tylko do odczytu." in saved_page
 
 
+@pytest.mark.parametrize("kind", ["nowy", "kolejna", "bez-zmian"])
+def test_demo_case_never_shows_save_message(demo_app, kind):
+    page = demo_app.test_client().get(f"/historia/PRZYKŁAD-1/4?zapis={kind}").get_data(as_text=True)
+
+    assert "Przypadek pokazowy jest tylko do odczytu." in page
+    assert "Utworzono przypadek" not in page
+    assert "Zapisano jako konsultację" not in page
+    assert "nowy wpis nie powstał" not in page
+
+
 def test_demo_case_cannot_be_extended_through_the_form(demo_app):
     client = demo_app.test_client()
     data = {**INTERVIEW_DEFAULTS, "P1": "34", "oznaczenie": "PRZYKŁAD-1"}

@@ -2,6 +2,7 @@ from flask import Blueprint, abort, current_app, redirect, render_template, requ
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.datastructures import MultiDict
+from werkzeug.exceptions import HTTPException
 
 from app.engine.engine import run
 from app.engine.parameters import PARAMETERS
@@ -41,6 +42,32 @@ from app.scenarios import BY_SLUG, SCENARIOS, matching_scenario
 bp = Blueprint("main", __name__)
 bp.add_app_template_filter(local_time, "local_time")
 bp.add_app_template_filter(consultation_count, "consultation_count")
+
+ERROR_PAGES = {
+    400: (
+        "Nieprawidłowe zapytanie",
+        "Serwer nie mógł odczytać wysłanych danych. Otwórz formularz i wyślij go jeszcze raz.",
+    ),
+    404: (
+        "Nie znaleziono strony",
+        "Pod tym adresem nie ma strony. Oznaczenie przypadku, numer konsultacji albo nazwa "
+        "przykładu mogą być wpisane z błędem.",
+    ),
+    405: (
+        "Niedozwolona metoda zapytania",
+        "Ten adres przyjmuje tylko dane wysłane z formularza konsultacji. Otwórz formularz "
+        "jeszcze raz.",
+    ),
+    500: (
+        "Błąd serwera",
+        "Wystąpił nieoczekiwany błąd i nie udało się przygotować strony. Spróbuj ponownie "
+        "za chwilę.",
+    ),
+}
+OTHER_ERROR = (
+    "Nie udało się obsłużyć zapytania",
+    "Serwer nie mógł obsłużyć tego zapytania. Wróć do strony głównej.",
+)
 
 LEVEL_TITLES = (
     (Level.RECOMMENDATION, "Rekomendacje", LEVELS[Level.RECOMMENDATION]),
@@ -196,7 +223,9 @@ def saved_consultation(label, number):
     consultation = case.consultations[number - 1]
     base = rule_base()
     record = review(consultation, base)
+    demo = is_demo(case.label)
     kind = request.args.get("zapis")
+    saved = Saved.from_kind(case.label, number, kind) if kind in SAVE_KINDS and not demo else None
     form = stored_form(case, consultation)
     return render_template(
         "saved.html",
@@ -217,8 +246,8 @@ def saved_consultation(label, number):
         rule_names=all_rule_names(),
         submitted=MultiDict(form),
         scenario=matching_scenario(form_display(consultation.parameters)),
-        saved=Saved.from_kind(case.label, number, kind) if kind in SAVE_KINDS else None,
-        demo=is_demo(case.label),
+        saved=saved,
+        demo=demo,
     )
 
 
@@ -243,3 +272,10 @@ def health():
     except SQLAlchemyError:
         return {"status": "error", "database": "unavailable"}, 503
     return {"status": "ok", "database": "ok"}
+
+
+@bp.app_errorhandler(HTTPException)
+def error_page(error):
+    title, message = ERROR_PAGES.get(error.code, OTHER_ERROR)
+    page = render_template("error.html", code=error.code, title=title, message=message)
+    return page, error.code, error.get_headers()

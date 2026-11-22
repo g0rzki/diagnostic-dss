@@ -3,7 +3,7 @@
   <span class="group relative inline-flex shrink-0 align-middle">
     <a href="{{ url_for('main.glossary') }}#{{ code }}" target="_blank" rel="noopener"
        aria-describedby="{{ tip_id }}"
-       class="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-brand/40 bg-brand-light px-2 py-0.5 font-mono text-xs font-semibold text-brand-dark hover:border-brand hover:bg-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+       class="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-brand/40 bg-brand-light px-2 py-0.5 tabular-nums text-xs font-semibold text-brand-dark hover:border-brand hover:bg-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
       {{- code -}}
       <svg viewBox="0 0 16 16" class="h-3.5 w-3.5" aria-hidden="true">
         <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
@@ -21,7 +21,7 @@
 
 {% macro code_link(code) -%}
   <a href="{{ url_for('main.glossary') }}#{{ code }}" target="_blank" rel="noopener"
-     class="whitespace-nowrap rounded border border-brand/30 px-1 font-mono text-xs font-semibold text-brand-dark hover:border-brand hover:bg-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+     class="whitespace-nowrap rounded border border-brand/30 px-1 tabular-nums text-xs font-semibold text-brand-dark hover:border-brand hover:bg-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
     {{- code -}}
   </a>
 {%- endmacro %}

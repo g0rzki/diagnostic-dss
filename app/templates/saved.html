@@ -6,7 +6,7 @@
 
 {% macro codes(items) -%}
   {% for code in items %}
-    {% if code in record.missing %}<span class="font-mono text-xs font-semibold">{{ code }}</span>{% else %}{{ code_link(code) }}{% endif %}
+    {% if code in record.missing %}<span class="tabular-nums text-xs font-semibold">{{ code }}</span>{% else %}{{ code_link(code) }}{% endif %}
   {% endfor %}
 {%- endmacro %}
 
