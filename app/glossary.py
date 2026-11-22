@@ -158,7 +158,7 @@ def value_text(param: Parameter) -> str:
         return f"dwie liczby całkowite ≥ {_number(param.min)} ({', '.join(param.parts)})"
     kind = "liczba całkowita" if param.type is ParamType.INT else "liczba"
     if param.min is not None and param.max is not None:
-        text = f"{kind} {_number(param.min)}–{_number(param.max)}"
+        text = f"{kind} {_number(param.min)}-{_number(param.max)}"
     elif param.min is not None:
         text = f"{kind} ≥ {_number(param.min)}"
     elif param.min_exclusive is not None:
@@ -217,8 +217,8 @@ def _pages(pages) -> str:
 
 
 def source_pages(rule: Rule) -> tuple[str, ...]:
-    pages = set(re.findall(r"s\. (\d+(?:–\d+)?)", rule.source.location)) or {str(rule.source.page)}
-    return tuple(sorted(pages, key=lambda page: int(page.split("–")[0])))
+    pages = set(re.findall(r"s\. (\d+(?:-\d+)?)", rule.source.location)) or {str(rule.source.page)}
+    return tuple(sorted(pages, key=lambda page: int(page.split("-")[0])))
 
 
 def source_text(base: RuleBase, rule: Rule) -> str:

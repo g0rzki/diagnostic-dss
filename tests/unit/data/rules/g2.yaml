@@ -1,6 +1,6 @@
 rules:
   - id: G2-04
-    name: druga próbka dodatnia poniżej 10 × GGN – niejednoznaczność źródła
+    name: "druga próbka dodatnia poniżej 10 × GGN: niejednoznaczność źródła"
     group: G2
     level: informacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
@@ -20,7 +20,7 @@ rules:
       Ocena należy do lekarza.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
     ptge:
@@ -28,7 +28,7 @@ rules:
       pages: [5]
 
   - id: G2-07
-    name: wiek ≥ 45 lat – ścieżka bez biopsji nie ma zastosowania
+    name: "wiek ≥ 45 lat: ścieżka bez biopsji nie ma zastosowania"
     group: G2
     level: rekomendacja
     uses: [P1, P3, P4, P13, P16]
@@ -46,7 +46,7 @@ rules:
       miana anty-TG2 IgA. Wskazana gastroduodenoskopia z pobraniem wycinków z dwunastnicy.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: niska, strength: opinia ekspercka, agreement: 95}

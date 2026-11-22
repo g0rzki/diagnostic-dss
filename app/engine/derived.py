@@ -23,7 +23,7 @@ _DERIVED = (
     Derived("D2_2", "wysokie miano anty-TG2 IgA w drugiej próbce", ParamType.BOOL, ("P5", "P6")),
     Derived(
         "D3",
-        "IgA całkowite – niedobór całkowity / częściowy / norma",
+        "IgA całkowite: niedobór całkowity, częściowy albo norma",
         ParamType.ENUM,
         ("P7", "P8"),
         ("brak", "całkowity", "częściowy", "norma"),

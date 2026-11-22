@@ -244,7 +244,7 @@ def _parse_grade(raw: object, where: str) -> Grade | None:
         raise InvalidRule(f"{where}.grade: dozwolone pola certainty, strength, agreement")
     agreement = raw.get("agreement")
     if agreement is not None and not (_is_int(agreement) and 0 <= agreement <= 100):
-        raise InvalidRule(f"{where}.grade.agreement: wymagana liczba całkowita 0–100")
+        raise InvalidRule(f"{where}.grade.agreement: wymagana liczba całkowita 0-100")
     return Grade(
         _choice(raw, "certainty", CERTAINTIES, f"{where}.grade"),
         _choice(raw, "strength", STRENGTHS, f"{where}.grade"),

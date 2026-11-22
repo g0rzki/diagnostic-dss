@@ -19,7 +19,7 @@ def test_scenario_fills_the_form_and_describes_its_path(client):
     assert 'aria-current="true"' in page
     assert "Ścieżka w systemie" in page
     assert scenario.path[0] in page
-    assert "Druga próbka dodatnia – rozpoznanie bez biopsji" in page
+    assert "Druga próbka dodatnia: rozpoznanie bez biopsji" in page
     assert 'id="P3" name="P3" value="150"' in page
     assert re.search(r'name="P12" value="tak"[^>]*checked', page)
 

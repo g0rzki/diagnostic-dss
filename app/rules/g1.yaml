@@ -1,6 +1,6 @@
 rules:
   - id: G1-01
-    name: brak serologii – zleć badania pierwszego rzutu
+    name: "brak serologii: zleć badania pierwszego rzutu"
     group: G1
     level: rekomendacja
     uses: [P2, P3, P7, P15]
@@ -18,7 +18,7 @@ rules:
       oznaczone); badanie wykonać na diecie zawierającej gluten.
     source:
       ref: esscd1
-      location: Q.II.1 pkt 1–2
+      location: Q.II.1 pkt 1-2
       page: 1865
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: silne, agreement: 95}
@@ -28,7 +28,7 @@ rules:
       grade: {certainty: wysoka, strength: silne}
 
   - id: G1-02
-    name: badania przy ograniczonym glutenie – ryzyko wyniku fałszywie ujemnego
+    name: "badania przy ograniczonym glutenie: ryzyko wyniku fałszywie ujemnego"
     group: G1
     level: ostrzeżenie
     uses: [P2, P3, P4, P9, P15, P16]
@@ -45,11 +45,11 @@ rules:
         - [P15, ≠, ujemny]
     conclusion: >-
       Badania serologiczne i histologiczne przy ograniczonym spożyciu glutenu mogą dać wynik
-      fałszywie ujemny – markery serologiczne normalizują się na diecie bezglutenowej. Ujemny
-      wynik nie wyklucza celiakii.
+      fałszywie ujemny, bo markery serologiczne normalizują się na diecie bezglutenowej.
+      Ujemny wynik nie wyklucza celiakii.
     source:
       ref: esscd1
-      location: Q.II.1 pkt 3 (zalecenie, s. 1865) + uzasadnienie (s. 1866); uzasadnienie Q.IV.8 (s. 1875)
+      location: Q.II.1 pkt 3 (zalecenie, s. 1865) i uzasadnienie (s. 1866); uzasadnienie Q.IV.8 (s. 1875)
       page: 1865
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: silne, agreement: 95}
@@ -58,7 +58,7 @@ rules:
       pages: [5, 11]
 
   - id: G1-03
-    name: całkowity niedobór IgA – serologia IgA niewiarygodna, testy IgG
+    name: "całkowity niedobór IgA: serologia IgA niewiarygodna, testy IgG"
     group: G1
     level: rekomendacja
     uses: [P7, P9, P15]
@@ -71,13 +71,14 @@ rules:
         - [P9, '=', nie wykonano]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Całkowity niedobór IgA – serologia w klasie IgA jest niewiarygodna (wynik ujemny może
-      być fałszywie ujemny). Zleć serologię w klasie IgG (anty-TG2 IgG lub anty-DGP IgG). Przy
-      objawach złego wchłaniania i diecie zawierającej gluten wskazana jest gastroduodenoskopia z
-      pobraniem wycinków niezależnie od wyniku testów IgG (jeśli jej nie wykonano).
+      Przy całkowitym niedoborze IgA serologia w klasie IgA jest niewiarygodna (wynik ujemny
+      może być fałszywie ujemny). Zleć serologię w klasie IgG (anty-TG2 IgG lub anty-DGP IgG).
+      Przy objawach złego wchłaniania i diecie zawierającej gluten wskazana jest
+      gastroduodenoskopia z pobraniem wycinków niezależnie od wyniku testów IgG (jeśli jej nie
+      wykonano).
     source:
       ref: esscd1
-      location: Q.II.6 (zalecenie) + uzasadnienie
+      location: Q.II.6 (zalecenie) i uzasadnienie
       page: 1868
       kind: zalecenie
       grade: {certainty: niska, strength: silne, agreement: 100}
@@ -86,7 +87,7 @@ rules:
       pages: [6]
 
   - id: G1-04
-    name: częściowy niedobór IgA przy ujemnej serologii – niejednoznaczność źródeł
+    name: "częściowy niedobór IgA przy ujemnej serologii: niejednoznaczność źródeł"
     group: G1
     level: informacja
     uses: [P3, P4, P7, P8, P9, P15]
@@ -101,11 +102,11 @@ rules:
         - [P15, ≠, ujemny]
     conclusion: >-
       Częściowy niedobór IgA. Zalecenie ESsCD wiąże testy IgG z niedoborem całkowitym,
-      natomiast uzasadnienie ESsCD i algorytm PTG-E (ryc. 3) mówią ogólnie o niedoborze IgA /
-      IgA poniżej normy. Rozważ testy IgG – decyzja należy do lekarza.
+      natomiast uzasadnienie ESsCD i algorytm PTG-E (ryc. 3) mówią ogólnie o niedoborze IgA
+      lub IgA poniżej normy. Rozważ testy IgG. Decyzja należy do lekarza.
     source:
       ref: esscd1
-      location: Q.II.6 (zalecenie) + uzasadnienie
+      location: Q.II.6 (zalecenie) i uzasadnienie
       page: 1868
       kind: uzasadnienie
     ptge:
@@ -113,7 +114,7 @@ rules:
       pages: [10]
 
   - id: G1-05
-    name: ujemna serologia przy prawidłowym IgA i diecie z glutenem
+    name: "ujemna serologia przy prawidłowym IgA i diecie z glutenem"
     group: G1
     level: informacja
     uses: [P2, P3, P4, P7, P8, P9, P13, P15]
@@ -132,8 +133,8 @@ rules:
     conclusion: >-
       Wynik ujemny zmniejsza prawdopodobieństwo celiakii. Czułość anty-TG2 IgA zależy od testu
       (metaanaliza u dorosłych ok. 91%, testy automatyczne do 99%), a postać seronegatywna
-      stanowi ok. 2–5% przypadków – przy utrzymującym się silnym podejrzeniu klinicznym
-      decyzja o dalszej diagnostyce należy do lekarza.
+      stanowi ok. 2-5% przypadków. Przy utrzymującym się silnym podejrzeniu klinicznym decyzja
+      o dalszej diagnostyce należy do lekarza.
     source:
       ref: esscd1
       location: uzasadnienie Q.II.1 (s. 1866); uzasadnienie Q.IV.4 (s. 1873)
@@ -144,7 +145,7 @@ rules:
       pages: [5, 6]
 
   - id: G1-06
-    name: krewny 1. stopnia – wskazanie do badania przesiewowego
+    name: "krewny 1. stopnia: wskazanie do badania przesiewowego"
     group: G1
     level: informacja
     uses: [P3, P9, P13, P15, P17]
@@ -172,7 +173,7 @@ rules:
       grade: {certainty: wysoka, strength: silne}
 
   - id: G1-07
-    name: wynik anty-TG2 bez IgA całkowitego – uzupełnij IgA
+    name: "wynik anty-TG2 bez IgA całkowitego: uzupełnij IgA"
     group: G1
     level: rekomendacja
     uses: [P3, P7, P15]
@@ -185,11 +186,11 @@ rules:
         - [P15, ≠, ujemny]
     conclusion: >-
       Uzupełnij oznaczenie IgA całkowitego (zalecane jednocześnie z anty-TG2 IgA). Bez niego
-      ujemnego wyniku anty-TG2 IgA nie można uznać za wiarygodny – przy niedoborze IgA bywa
+      ujemnego wyniku anty-TG2 IgA nie można uznać za wiarygodny, bo przy niedoborze IgA bywa
       fałszywie ujemny.
     source:
       ref: esscd1
-      location: Q.II.1 pkt 2 (zalecenie, s. 1865) + uzasadnienie (s. 1866)
+      location: Q.II.1 pkt 2 (zalecenie, s. 1865) i uzasadnienie (s. 1866)
       page: 1865
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: silne, agreement: 95}

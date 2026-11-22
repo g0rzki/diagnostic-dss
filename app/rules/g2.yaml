@@ -1,12 +1,12 @@
 rules:
   - id: G2-01
-    name: ścieżka bez biopsji możliwa – omów z pacjentem
+    name: "ścieżka bez biopsji możliwa: omów z pacjentem"
     group: G2
     level: rekomendacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
     condition_text: >-
-      ścieżka bez biopsji dostępna (D4), zgoda pacjenta nieomówiona (P12 = nie omówiono) i druga
-      próbka nie ujemna (brak P5 lub P5 > P6)
+      ścieżka bez biopsji dostępna (D4), zgoda pacjenta nieomówiona (P12 = nie omówiono) i
+      druga próbka nie ujemna (brak P5 lub P5 > P6)
     condition:
       all:
         - [D4, '=', true]
@@ -19,7 +19,7 @@ rules:
       potwierdzenie rozpoznania podejmuje się w opiece specjalistycznej.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: nie dotyczy, strength: dobra praktyka (UGPS), agreement: 95}
@@ -28,7 +28,7 @@ rules:
       pages: [7]
 
   - id: G2-02
-    name: zgoda na ścieżkę bez biopsji – oznacz anty-TG2 IgA w drugiej próbce
+    name: "zgoda na ścieżkę bez biopsji: oznacz anty-TG2 IgA w drugiej próbce"
     group: G2
     level: rekomendacja
     uses: [P1, P2, P3, P4, P5, P7, P11, P12, P13, P15]
@@ -45,7 +45,7 @@ rules:
       pacjent pozostaje na diecie zawierającej gluten.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: nie dotyczy, strength: opinia ekspercka, agreement: 95}
@@ -54,7 +54,7 @@ rules:
       pages: [5]
 
   - id: G2-03
-    name: druga próbka dodatnia – rozpoznanie bez biopsji
+    name: "druga próbka dodatnia: rozpoznanie bez biopsji"
     group: G2
     level: rekomendacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
@@ -73,7 +73,7 @@ rules:
       specjalistycznej.
     source:
       ref: esscd1
-      location: Q.IV.1.2 (zalecenie) + kluczowe uwagi
+      location: Q.IV.1.2 (zalecenie) i kluczowe uwagi
       page: 1870
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: warunkowe, agreement: 95}
@@ -82,13 +82,13 @@ rules:
       pages: [9]
 
   - id: G2-04
-    name: druga próbka dodatnia poniżej 10 × GGN – niejednoznaczność źródła
+    name: "druga próbka dodatnia poniżej 10 × GGN: niejednoznaczność źródła"
     group: G2
     level: informacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
     condition_text: >-
-      ścieżka bez biopsji dostępna (D4), zgoda pacjenta (P12 = tak), druga próbka dodatnia
-      (P5 > P6) i poniżej 10 × GGN (P5 < 10 × P6)
+      ścieżka bez biopsji dostępna (D4), zgoda pacjenta (P12 = tak), druga próbka dodatnia (P5
+      > P6) i poniżej 10 × GGN (P5 < 10 × P6)
     condition:
       all:
         - [D4, '=', true]
@@ -102,7 +102,7 @@ rules:
       Ocena należy do lekarza.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
     ptge:
@@ -110,7 +110,7 @@ rules:
       pages: [5]
 
   - id: G2-05
-    name: druga próbka ujemna – brak potwierdzenia, biopsja
+    name: "druga próbka ujemna: brak potwierdzenia, biopsja"
     group: G2
     level: rekomendacja
     uses: [P1, P2, P3, P4, P5, P6, P7, P11, P12, P13, P15]
@@ -123,11 +123,11 @@ rules:
         - [P12, '≠', nie]
         - [D1_2, '=', ujemny]
     conclusion: >-
-      Druga próbka nie potwierdziła wyniku – rozpoznanie bez biopsji nie jest możliwe.
+      Druga próbka nie potwierdziła wyniku, więc rozpoznanie bez biopsji nie jest możliwe.
       Wskazana gastroduodenoskopia z pobraniem wycinków z dwunastnicy.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi + Q.IV.1.1 (zalecenie)
+      location: Q.IV.1.2, kluczowe uwagi i Q.IV.1.1 (zalecenie)
       page: 1870
       kind: zalecenie
       grade: {certainty: nie dotyczy, strength: opinia ekspercka, agreement: 95}
@@ -136,7 +136,7 @@ rules:
       pages: [5]
 
   - id: G2-06
-    name: brak zgody na ścieżkę bez biopsji – biopsja
+    name: "brak zgody na ścieżkę bez biopsji: biopsja"
     group: G2
     level: rekomendacja
     uses: [P1, P2, P3, P4, P7, P11, P12, P13, P15]
@@ -151,7 +151,7 @@ rules:
       pobraniem wycinków z dwunastnicy.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi + Q.IV.1.1 (zalecenie)
+      location: Q.IV.1.2, kluczowe uwagi i Q.IV.1.1 (zalecenie)
       page: 1870
       kind: zalecenie
       grade: {certainty: nie dotyczy, strength: dobra praktyka (UGPS), agreement: 95}
@@ -160,7 +160,7 @@ rules:
       pages: [5, 7, 10]
 
   - id: G2-07
-    name: wiek ≥ 45 lat – ścieżka bez biopsji nie ma zastosowania
+    name: "wiek ≥ 45 lat: ścieżka bez biopsji nie ma zastosowania"
     group: G2
     level: rekomendacja
     uses: [P1, P3, P4, P13, P16]
@@ -178,7 +178,7 @@ rules:
       miana anty-TG2 IgA. Wskazana gastroduodenoskopia z pobraniem wycinków z dwunastnicy.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: niska, strength: opinia ekspercka, agreement: 95}
@@ -187,7 +187,7 @@ rules:
       pages: [9]
 
   - id: G2-08
-    name: objawy alarmowe – ścieżka bez biopsji nie ma zastosowania
+    name: "objawy alarmowe: ścieżka bez biopsji nie ma zastosowania"
     group: G2
     level: rekomendacja
     uses: [P3, P4, P11, P13, P16]
@@ -201,12 +201,12 @@ rules:
         - [P13, '=', nie wykonano]
         - [P16, ≠, true]
     conclusion: >-
-      Objawy alarmowe mogą wskazywać na inną chorobę – rozpoznanie bez biopsji nie ma
+      Objawy alarmowe mogą wskazywać na inną chorobę, dlatego rozpoznanie bez biopsji nie ma
       zastosowania mimo wysokiego miana anty-TG2 IgA. Wskazana gastroduodenoskopia z pobraniem
       wycinków z dwunastnicy.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: nie dotyczy, strength: dobra praktyka (UGPS), agreement: 95}
@@ -215,7 +215,7 @@ rules:
       pages: [5]
 
   - id: G2-09
-    name: wysokie miano przy ograniczonym glutenie – rozbieżność wytycznych
+    name: "wysokie miano przy ograniczonym glutenie: rozbieżność wytycznych"
     group: G2
     level: informacja
     uses: [P1, P2, P3, P4, P7, P11, P13, P15, P16]
@@ -240,10 +240,10 @@ rules:
       glutenu wśród czynników przemawiających za elastycznością przy powtórnym oznaczeniu.
       PTG-E dopuszcza rozważenie rozpoznania bez biopsji, gdy pacjent z powodu nasilonych
       objawów rozpoczął dietę bezglutenową po badaniu przeciwciał, a przed endoskopią.
-      Wytyczne różnią się – decyzja należy do lekarza.
+      Wytyczne różnią się, więc decyzja należy do lekarza.
     source:
       ref: esscd1
-      location: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
     ptge:
@@ -251,7 +251,7 @@ rules:
       pages: [7]
 
   - id: G2-10
-    name: wysokie miano przy ujemnym HLA-DQ2/DQ8 – rozpoznanie bez biopsji nie ma zastosowania
+    name: "wysokie miano przy ujemnym HLA-DQ2/DQ8: rozpoznanie bez biopsji nie ma zastosowania"
     group: G2
     level: informacja
     uses: [P3, P4, P7, P13, P15, P16]
@@ -267,10 +267,10 @@ rules:
         - [P13, '=', nie wykonano]
         - [P16, ≠, true]
     conclusion: >-
-      Wysokie miano anty-TG2 IgA przy ujemnym HLA-DQ2/DQ8 – wyniki są rozbieżne. Ujemne HLA
+      Wysokie miano anty-TG2 IgA i ujemne HLA-DQ2/DQ8 to wyniki rozbieżne. Ujemne HLA
       praktycznie wyklucza celiakię, a miano powyżej 10 × GGN silnie przewiduje zanik kosmków
-      zwłaszcza u nosicieli HLA-DQ2/DQ8. Rozpoznanie bez biopsji nie ma tu zastosowania –
-      rozstrzyga gastroduodenoskopia z oceną histologiczną.
+      zwłaszcza u nosicieli HLA-DQ2/DQ8. Rozpoznanie bez biopsji nie ma tu zastosowania.
+      Rozstrzyga gastroduodenoskopia z oceną histologiczną.
     source:
       ref: esscd1
       location: Q.IV.8, kluczowe uwagi (s. 1875); uzasadnienie Q.IV.2 (s. 1872); streszczenie (s. 1856); Q.IV.1.1 (s. 1870)

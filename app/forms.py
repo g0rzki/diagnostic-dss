@@ -14,7 +14,7 @@ INTERVIEW_DEFAULTS = {
 }
 
 HINTS = {
-    "P1": "pełne lata, 18–120",
+    "P1": "pełne lata, 18-120",
     "P2": "ograniczone oznacza także całkowitą eliminację glutenu przed diagnostyką",
     "P3": "w jednostkach laboratorium; wynik „< X” lub „> X” można wpisać ze znakiem",
     "P5": "w jednostkach laboratorium; wynik „< X” lub „> X” można wpisać ze znakiem",

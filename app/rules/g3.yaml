@@ -1,6 +1,6 @@
 rules:
   - id: G3-01
-    name: niskie miano anty-TG2 IgA – biopsja niezbędna
+    name: "niskie miano anty-TG2 IgA: biopsja niezbędna"
     group: G3
     level: rekomendacja
     uses: [P3, P4, P7, P13, P16]
@@ -13,11 +13,12 @@ rules:
         - [P13, '=', nie wykonano]
         - [P16, ≠, true]
     conclusion: >-
-      Anty-TG2 IgA dodatnie poniżej 10 × GGN – do potwierdzenia rozpoznania niezbędna jest
-      gastroduodenoskopia z pobraniem wycinków z dwunastnicy. Niższe miana są mniej swoiste.
+      Anty-TG2 IgA są dodatnie, ale poniżej 10 × GGN, więc do potwierdzenia rozpoznania
+      niezbędna jest gastroduodenoskopia z pobraniem wycinków z dwunastnicy. Niższe miana są
+      mniej swoiste.
     source:
       ref: esscd1
-      location: uzasadnienie Q.IV.1.1–1.2 (s. 1871) + Q.IV.1.1 (zalecenie, s. 1870)
+      location: uzasadnienie Q.IV.1.1-1.2 (s. 1871) i Q.IV.1.1 (zalecenie, s. 1870)
       page: 1871
       kind: uzasadnienie
       grade: {certainty: wysoka, strength: silne, agreement: 100}
@@ -26,7 +27,7 @@ rules:
       pages: [9]
 
   - id: G3-02
-    name: niskie miano – możliwe powtórzenie serologii przed biopsją
+    name: "niskie miano: możliwe powtórzenie serologii przed biopsją"
     group: G3
     level: informacja
     uses: [P3, P4, P5, P7, P13, P16]
@@ -45,14 +46,14 @@ rules:
       histologiczne nie jest konieczne.
     source:
       ref: esscd1
-      location: uzasadnienie Q.IV.1.1–1.2 (s. 1871)
+      location: uzasadnienie Q.IV.1.1-1.2 (s. 1871)
       page: 1871
       kind: uzasadnienie
     ptge:
       status: brak odniesienia
 
   - id: G3-03
-    name: protokół pobrania wycinków
+    name: "protokół pobrania wycinków"
     group: G3
     level: rekomendacja
     basis: ptge
@@ -67,11 +68,11 @@ rules:
         - [D9, '=', false]
     conclusion: >-
       Przy gastroduodenoskopii pobierz co najmniej 4 wycinki z części zstępującej dwunastnicy
-      oraz 1–2 wycinki z opuszki, niezależnie od obrazu endoskopowego; wycinki z opuszki w
+      oraz 1-2 wycinki z opuszki, niezależnie od obrazu endoskopowego; wycinki z opuszki w
       osobnym pojemniku. ESsCD w zaleceniu podaje dwa wycinki z opuszki.
     source:
       ref: esscd1
-      location: Q.III.1 – zalecenie i uzasadnienie (s. 1868)
+      location: Q.III.1, zalecenie i uzasadnienie (s. 1868)
       page: 1868
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: silne, agreement: 100}
@@ -81,7 +82,7 @@ rules:
       grade: {certainty: wysoka, strength: silne}
 
   - id: G3-04
-    name: biopsja przy ograniczonym spożyciu glutenu
+    name: "biopsja przy ograniczonym spożyciu glutenu"
     group: G3
     level: ostrzeżenie
     uses: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P11, P12, P13, P15, P16]
@@ -96,9 +97,9 @@ rules:
         - [P2, '=', ograniczone]
         - [P16, '=', false]
     conclusion: >-
-      Pacjent ogranicza gluten – wynik histopatologiczny może być fałszywie ujemny. Przed
-      biopsją ustal, jak długo i w jakim stopniu ograniczano gluten – zmiany mogą się
-      utrzymywać, jeśli dietę stosowano krótko (1–3 miesiące).
+      Pacjent ogranicza gluten, więc wynik histopatologiczny może być fałszywie ujemny. Przed
+      biopsją ustal, jak długo i w jakim stopniu ograniczano gluten. Zmiany mogą się
+      utrzymywać, jeśli dietę stosowano krótko (1-3 miesiące).
     source:
       ref: esscd1
       location: uzasadnienie Q.IV.8 (s. 1875)
@@ -109,7 +110,7 @@ rules:
       pages: [11]
 
   - id: G3-05
-    name: Marsh 3 i serologia dodatnia – rozpoznanie potwierdzone
+    name: "Marsh 3 i serologia dodatnia: rozpoznanie potwierdzone"
     group: G3
     level: rekomendacja
     uses: [P3, P4, P7, P8, P9, P13]
@@ -124,7 +125,7 @@ rules:
       niezależnie od miana przeciwciał.
     source:
       ref: esscd1
-      location: Q.IV.1.1 (zalecenie, s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.1 (zalecenie, s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: wysoka, strength: silne, agreement: 100}
@@ -134,7 +135,7 @@ rules:
       grade: {certainty: wysoka, strength: silne}
 
   - id: G3-06
-    name: Marsh 2 i serologia dodatnia bez niskiego miana – rozpoznanie potwierdzone
+    name: "Marsh 2 i serologia dodatnia bez niskiego miana: rozpoznanie potwierdzone"
     group: G3
     level: rekomendacja
     uses: [P3, P4, P7, P8, P9, P13]
@@ -151,7 +152,7 @@ rules:
       lub dodatnich przeciwciałach w klasie IgG.
     source:
       ref: esscd1
-      location: Q.IV.1.1 (zalecenie, s. 1870) + uzasadnienie (s. 1871)
+      location: Q.IV.1.1 (zalecenie, s. 1870) i uzasadnienie (s. 1871)
       page: 1870
       kind: zalecenie
       grade: {certainty: wysoka, strength: silne, agreement: 100}
@@ -160,7 +161,7 @@ rules:
       pages: [8]
 
   - id: G3-07
-    name: Marsh 2 i niskie miano – szara strefa
+    name: "Marsh 2 i niskie miano: szara strefa"
     group: G3
     level: rekomendacja
     basis: ptge
@@ -174,7 +175,7 @@ rules:
         - [D5, '=', dodatnia]
         - [D6, '=', true]
     conclusion: >-
-      Marsh 2 przy niskim mianie anty-TG2 IgA – rozpoznanie niepewne (szara strefa). W
+      Marsh 2 przy niskim mianie anty-TG2 IgA oznacza rozpoznanie niepewne (szara strefa). W
       pierwszej kolejności oceń spożycie glutenu; rozważ kontrolę serologiczną i diagnostykę
       różnicową. Pacjent wymaga obserwacji w opiece specjalistycznej. Zalecenie ESsCD uznaje
       Marsh 2 przy dodatniej serologii za potwierdzenie.
@@ -188,7 +189,7 @@ rules:
       pages: [8]
 
   - id: G3-08
-    name: Marsh 0 i serologia dodatnia – celiakia potencjalna
+    name: "Marsh 0 i serologia dodatnia: celiakia potencjalna"
     group: G3
     level: rekomendacja
     basis: ptge
@@ -203,15 +204,15 @@ rules:
         - [D8, '=', true]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Celiakia potencjalna – rozpoznania celiakii nie można ustalić. Powtórz serologię (przy
+      Celiakia potencjalna. Rozpoznania celiakii nie można ustalić. Powtórz serologię (przy
       diecie z glutenem), upewnij się, że pobrano wystarczającą liczbę wycinków, rozważ
       HLA-DQ2/DQ8 (jeśli nie badano) i konsultację specjalisty. Przy utrzymujących się
-      objawach powtórz serologię za 3–6 miesięcy; bez objawów można kontynuować dietę z
+      objawach powtórz serologię za 3-6 miesięcy; bez objawów można kontynuować dietę z
       glutenem pod kontrolą kliniczną i endoskopową. ESsCD nazywa ten stan potencjalnym
       dopiero przy utrzymującej się serologii i HLA-DQ2/DQ8.
     source:
       ref: esscd1
-      location: Q.IV.2 – zalecenie i postępowanie (s. 1872)
+      location: Q.IV.2, zalecenie i postępowanie (s. 1872)
       page: 1872
       kind: zalecenie
       grade: {certainty: niska, strength: silne, agreement: 95}
@@ -220,7 +221,7 @@ rules:
       pages: [10, 11]
 
   - id: G3-09
-    name: Marsh 0–1, serologia dodatnia i HLA ujemne – celiakia wykluczona
+    name: "Marsh 0-1, serologia dodatnia i HLA ujemne: celiakia wykluczona"
     group: G3
     level: rekomendacja
     uses: [P3, P4, P7, P8, P9, P13, P15]
@@ -233,11 +234,11 @@ rules:
         - [D5, '=', dodatnia]
         - [P15, '=', ujemny]
     conclusion: >-
-      Brak HLA-DQ2/DQ8 praktycznie wyklucza celiakię – dodatnią serologię należy uznać za
+      Brak HLA-DQ2/DQ8 praktycznie wyklucza celiakię, więc dodatnią serologię należy uznać za
       fałszywie dodatnią i szukać innej przyczyny dolegliwości.
     source:
       ref: esscd1
-      location: Q.IV.2 – postępowanie (s. 1872); Q.IV.8, kluczowe uwagi (s. 1875); uzasadnienie Q.II.6 (s. 1868)
+      location: Q.IV.2, postępowanie (s. 1872); Q.IV.8, kluczowe uwagi (s. 1875); uzasadnienie Q.II.6 (s. 1868)
       page: 1872
       kind: uzasadnienie
     ptge:
@@ -245,7 +246,7 @@ rules:
       pages: [12]
 
   - id: G3-10
-    name: Marsh 1 i serologia dodatnia – celiakia możliwa
+    name: "Marsh 1 i serologia dodatnia: celiakia możliwa"
     group: G3
     level: rekomendacja
     basis: ptge
@@ -260,14 +261,14 @@ rules:
         - [D8, '=', true]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Celiakia możliwa (m.in. mozaikowe rozmieszczenie zmian w dwunastnicy) – konieczne
+      Celiakia możliwa (m.in. mozaikowe rozmieszczenie zmian w dwunastnicy). Konieczne jest
       pogłębienie diagnostyki: powtórz serologię przy diecie z glutenem, upewnij się, że
       pobrano wystarczającą liczbę wycinków, rozważ HLA-DQ2/DQ8 (jeśli nie badano),
       konsultację specjalisty i ponowną ocenę wycinków. Według ESsCD rozpoznania nie można
       ustalić.
     source:
       ref: esscd1
-      location: Q.IV.2 – zalecenie i postępowanie (s. 1872)
+      location: Q.IV.2, zalecenie i postępowanie (s. 1872)
       page: 1872
       kind: zalecenie
       grade: {certainty: niska, strength: silne, agreement: 95}
@@ -276,7 +277,7 @@ rules:
       pages: [9, 10]
 
   - id: G3-11
-    name: Marsh 0–1 przy wysokim mianie – możliwy błąd pobrania
+    name: "Marsh 0-1 przy wysokim mianie: możliwy błąd pobrania"
     group: G3
     level: informacja
     uses: [P3, P4, P7, P13, P15]
@@ -291,7 +292,7 @@ rules:
         - [P15, ≠, ujemny]
     conclusion: >-
       Miano anty-TG2 IgA powyżej 10 × GGN silnie przewiduje zanik kosmków (zwłaszcza u
-      nosicieli HLA-DQ2/DQ8 i przy objawach) – prawidłowa architektura może wynikać z
+      nosicieli HLA-DQ2/DQ8 i przy objawach), więc prawidłowa architektura może wynikać z
       mozaikowego rozmieszczenia zmian. Przy silnym podejrzeniu klinicznym (np. utrzymujące
       się objawy, wywiad rodzinny) można indywidualnie rozważyć ponowną ocenę wycinków przez
       drugiego patologa, badanie immunohistochemiczne lub powtórną endoskopię.
@@ -305,7 +306,7 @@ rules:
       pages: [9]
 
   - id: G3-12
-    name: Marsh 1 i serologia ujemna – celiakia mało prawdopodobna
+    name: "Marsh 1 i serologia ujemna: celiakia mało prawdopodobna"
     group: G3
     level: rekomendacja
     uses: [P2, P3, P4, P7, P8, P9, P13, P16]
@@ -318,12 +319,12 @@ rules:
         - [D5, '=', ujemna]
         - [D8, '=', true]
     conclusion: >-
-      Celiakia mało prawdopodobna – szukaj innych przyczyn limfocytozy śródnabłonkowej. Przy
+      Celiakia mało prawdopodobna. Szukaj innych przyczyn limfocytozy śródnabłonkowej. Przy
       ujemnej serologii postęp do zaniku kosmków jest znikomy; zakończenie diagnostyki w
       kierunku celiakii jest dopuszczalne.
     source:
       ref: esscd1
-      location: Q.IV.3 – zalecenie (s. 1872) i uzasadnienie (s. 1873)
+      location: Q.IV.3, zalecenie (s. 1872) i uzasadnienie (s. 1873)
       page: 1872
       kind: zalecenie
       grade: {certainty: niska, strength: silne, agreement: 100}
@@ -332,7 +333,7 @@ rules:
       pages: [8]
 
   - id: G3-13
-    name: Marsh 0 i serologia ujemna – celiakia wykluczona
+    name: "Marsh 0 i serologia ujemna: celiakia wykluczona"
     group: G3
     level: rekomendacja
     basis: ptge
@@ -351,7 +352,7 @@ rules:
       glutenem i prawidłowo pobranych wycinkach.
     source:
       ref: esscd1
-      location: Q.IV.2 – postępowanie i uzasadnienie (s. 1872); Q.III.4, punkt 5 (s. 1870); uzasadnienie Q.IV.8 (s. 1875)
+      location: Q.IV.2, postępowanie i uzasadnienie (s. 1872); Q.III.4, punkt 5 (s. 1870); uzasadnienie Q.IV.8 (s. 1875)
       page: 1872
       kind: uzasadnienie
     ptge:
@@ -359,7 +360,7 @@ rules:
       pages: [9]
 
   - id: G3-14
-    name: zanik kosmków przy ujemnej serologii
+    name: "zanik kosmków przy ujemnej serologii"
     group: G3
     level: rekomendacja
     uses: [P3, P4, P7, P8, P9, P13, P15]
@@ -371,16 +372,16 @@ rules:
         - [D5, '=', ujemna]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Zanik kosmków bez dodatniej serologii – najpierw wyklucz inne przyczyny zaniku (m.in.
+      Zanik kosmków bez dodatniej serologii. Najpierw wyklucz inne przyczyny zaniku (m.in.
       zakażenia, leki, niedobory odporności, choroby limfoproliferacyjne), zweryfikuj wycinki
       u doświadczonego patologa, sprawdź, czy badania nie wykonano przy diecie bezglutenowej
       lub lekach immunosupresyjnych, oznacz HLA-DQ2/DQ8 (jeśli nie badano) i rozważ
       skierowanie do ośrodka referencyjnego. Rozpoznanie celiakii seronegatywnej opiera się na
-      odpowiedzi klinicznej i histologicznej na dietę bezglutenową u nosicieli HLA-DQ2/DQ8 –
-      ocena w czasie, poza zakresem systemu.
+      odpowiedzi klinicznej i histologicznej na dietę bezglutenową u nosicieli HLA-DQ2/DQ8. Ta
+      ocena wymaga obserwacji w czasie i wykracza poza zakres systemu.
     source:
       ref: esscd1
-      location: Q.IV.4 – zalecenie i uzasadnienie, tab. 3 (s. 1873); ryc. 1 (s. 1874)
+      location: Q.IV.4, zalecenie i uzasadnienie, tab. 3 (s. 1873); ryc. 1 (s. 1874)
       page: 1873
       kind: zalecenie
       grade: {certainty: niska, strength: silne, agreement: 95}
@@ -389,7 +390,7 @@ rules:
       pages: [10, 11]
 
   - id: G3-15
-    name: Marsh 2 przy ujemnej serologii – celiakia możliwa
+    name: "Marsh 2 przy ujemnej serologii: celiakia możliwa"
     group: G3
     level: informacja
     basis: ptge
@@ -403,12 +404,13 @@ rules:
         - [D5, '=', ujemna]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Marsh 2 przy ujemnej serologii – celiakia możliwa. Rozważ inne przyczyny enteropatii,
-      ponownie oceń spożycie glutenu i rozważ badanie genetyczne HLA-DQ2/DQ8 (jeśli nie
-      badano). Zmiany o niewielkim nasileniu oceniane są przez patologów rozbieżnie.
+      Przy Marsh 2 i ujemnej serologii celiakia jest możliwa. Rozważ inne przyczyny
+      enteropatii, ponownie oceń spożycie glutenu i rozważ badanie genetyczne HLA-DQ2/DQ8
+      (jeśli nie badano). Zmiany o niewielkim nasileniu oceniane są przez patologów
+      rozbieżnie.
     source:
       ref: esscd1
-      location: Q.III.4 – stwierdzenie (s. 1869)
+      location: Q.III.4, stwierdzenie (s. 1869)
       page: 1869
       kind: zalecenie
     ptge:
@@ -416,7 +418,7 @@ rules:
       pages: [10]
 
   - id: G3-16
-    name: prawidłowa lub prawie prawidłowa histologia przy ograniczonym glutenie
+    name: "prawidłowa lub prawie prawidłowa histologia przy ograniczonym glutenie"
     group: G3
     level: ostrzeżenie
     uses: [P2, P13, P15, P16]
@@ -429,12 +431,12 @@ rules:
         - [D8, '=', false]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Biopsję wykonano przy ograniczonym spożyciu glutenu – prawidłowy lub prawie prawidłowy
-      obraz histologiczny może być fałszywie ujemny i nie wyklucza celiakii. Ocena wymaga
-      diety z glutenem (postępowanie przy diecie ograniczonej – HLA i prowokacja).
+      Biopsję wykonano przy ograniczonym spożyciu glutenu, więc prawidłowy lub prawie
+      prawidłowy obraz histologiczny może być fałszywie ujemny i nie wyklucza celiakii. Ocena
+      wymaga diety z glutenem (postępowanie przy diecie ograniczonej: HLA i prowokacja).
     source:
       ref: esscd1
-      location: uzasadnienie Q.IV.8 (s. 1875); Q.IV.2 – postępowanie (s. 1872)
+      location: uzasadnienie Q.IV.8 (s. 1875); Q.IV.2, postępowanie (s. 1872)
       page: 1875
       kind: uzasadnienie
     ptge:
@@ -442,7 +444,7 @@ rules:
       pages: [9, 11]
 
   - id: G3-17
-    name: Marsh 0–1 przy zbyt małej liczbie wycinków
+    name: "Marsh 0-1 przy zbyt małej liczbie wycinków"
     group: G3
     level: ostrzeżenie
     uses: [P13, P14, P15]
@@ -455,9 +457,9 @@ rules:
         - [D7, '=', false]
         - [P15, ≠, ujemny]
     conclusion: >-
-      Pobrano mniej wycinków niż zalecane (co najmniej 4 z części zstępującej i 1–2 z opuszki)
-      – obraz prawidłowy lub prawie prawidłowy może być fałszywie ujemny, bo zmiany bywają
-      rozmieszczone mozaikowo.
+      Pobrano mniej wycinków niż zalecane (co najmniej 4 z części zstępującej i 1-2 z
+      opuszki). Obraz prawidłowy lub prawie prawidłowy może być fałszywie ujemny, bo zmiany
+      bywają rozmieszczone mozaikowo.
     source:
       ref: esscd1
       location: uzasadnienie i postępowanie Q.IV.2 (s. 1872); Q.III.4, punkt 5 (s. 1870); uzasadnienie Q.III.1 (s. 1868)

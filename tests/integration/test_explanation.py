@@ -18,7 +18,7 @@ def test_explanation_shows_condition_values_and_source(client):
     assert "Wartości w warunku" in page
     assert 'ścieżka bez biopsji dostępna: <span class="font-medium">tak</span>' in page
     assert 'wiek: <span class="font-medium">30 lat</span>' in page
-    assert "ESsCD 2025 cz. 1: Q.IV.1.2 (zalecenie) + kluczowe uwagi, s. 1870" in page
+    assert "ESsCD 2025 cz. 1: Q.IV.1.2 (zalecenie) i kluczowe uwagi, s. 1870" in page
     assert "siła zalecenia: warunkowe, zgoda 95%" in page
     assert 'href="/slownik#D4"' in page
 

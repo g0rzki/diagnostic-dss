@@ -1,6 +1,6 @@
 rules:
   - id: G1-01
-    name: brak serologii – zleć badania pierwszego rzutu
+    name: "brak serologii: zleć badania pierwszego rzutu"
     group: G1
     level: rekomendacja
     uses: [P2, P3, P7, P15]
@@ -18,7 +18,7 @@ rules:
       oznaczone); badanie wykonać na diecie zawierającej gluten.
     source:
       ref: esscd1
-      location: Q.II.1 pkt 1–2
+      location: Q.II.1 pkt 1-2
       page: 1865
       kind: zalecenie
       grade: {certainty: umiarkowana, strength: silne, agreement: 95}

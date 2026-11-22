@@ -105,7 +105,7 @@ def test_explanation_of_no_biopsy_path():
         "P15",
     ]
     assert why.source == (
-        "ESsCD 2025 cz. 1: Q.IV.1.2, kluczowe uwagi (s. 1870) + uzasadnienie (s. 1871)"
+        "ESsCD 2025 cz. 1: Q.IV.1.2, kluczowe uwagi (s. 1870) i uzasadnienie (s. 1871)"
     )
     assert why.evidence == "Zalecenie; siła zalecenia: dobra praktyka (UGPS), zgoda 95%"
     assert why.ptge == "zgodność, s. 7"

@@ -47,7 +47,7 @@ Baza wiedzy składa się z danych wejściowych (kody P), wartości wyliczanych p
 
 | Kod | Dana | Wartości | Wymagana |
 |---|---|---|---|
-| P1 | wiek | liczba całkowita 18–120 [lata] | tak |
+| P1 | wiek | liczba całkowita 18-120 [lata] | tak |
 | P2 | spożycie glutenu w okresie badań | normalne / ograniczone | tak |
 | P3 | anty-TG2 IgA, wynik 1 | liczba > 0 | nie |
 | P4 | GGN laboratorium dla wyniku 1 | liczba > 0 | gdy podano P3 |
@@ -111,8 +111,8 @@ Każda reguła ma źródło w ESsCD (miejsce w wytycznych ze stroną, rodzaj fra
 
 | Źródło | Opis bibliograficzny | Rola w systemie |
 |---|---|---|
-| ESsCD 2025 cz. 1 | Al-Toma A. i wsp. European Society for the Study of Coeliac Disease 2025 Updated Guidelines on the Diagnosis and Management of Coeliac Disease in Adults. Part 1: Diagnostic Approach. *United European Gastroenterology Journal* 2025;13(10):1855–1886. [doi:10.1002/ueg2.70119](https://doi.org/10.1002/ueg2.70119) | warunki reguł i oceny GRADE; strony według paginacji czasopisma |
-| PTG-E 2026 | Gawron-Kiszka M. i wsp. Wytyczne postępowania w celiakii – rekomendacje Sekcji Jelitowej Polskiego Towarzystwa Gastroenterologii. *Gastroenterology Review* 2026;21(3). [doi:10.5114/pg.2026.164973](https://doi.org/10.5114/pg.2026.164973) | zgodność z zaleceniami krajowymi, kierunek części reguł przy rozbieżności źródeł, polska terminologia; strony według numeracji artykułu |
+| ESsCD 2025 cz. 1 | Al-Toma A. i wsp. European Society for the Study of Coeliac Disease 2025 Updated Guidelines on the Diagnosis and Management of Coeliac Disease in Adults. Part 1: Diagnostic Approach. *United European Gastroenterology Journal* 2025;13(10):1855-1886. [doi:10.1002/ueg2.70119](https://doi.org/10.1002/ueg2.70119) | warunki reguł i oceny GRADE; strony według paginacji czasopisma |
+| PTG-E 2026 | Gawron-Kiszka M. i wsp. Wytyczne postępowania w celiakii - rekomendacje Sekcji Jelitowej Polskiego Towarzystwa Gastroenterologii. *Gastroenterology Review* 2026;21(3). [doi:10.5114/pg.2026.164973](https://doi.org/10.5114/pg.2026.164973) | zgodność z zaleceniami krajowymi, kierunek części reguł przy rozbieżności źródeł, polska terminologia; strony według numeracji artykułu |
 
 Kierunek reguły pochodzi z ESsCD. Wyjątkiem są reguły oznaczone w słowniku „kierunek reguły według PTG-E”: przy rozbieżności źródeł przyjęto w nich stanowisko PTG-E.
 
@@ -229,9 +229,9 @@ Przebieg konsultacji: formularz, walidacja danych, wartości wyliczane, ocena re
 ```
 app/
   engine/            logika domenowa, niezależna od Flaska
-    parameters.py    rejestr danych wejściowych P1–P17 (typy, zakresy, pola warunkowe)
+    parameters.py    rejestr danych wejściowych P1-P17 (typy, zakresy, pola warunkowe)
     validation.py    walidacja i normalizacja danych z formularza
-    derived.py       wartości wyliczane D1–D9
+    derived.py       wartości wyliczane D1-D9
     rules.py         wczytywanie i sprawdzanie plików reguł
     engine.py        ocena reguł dla danych pacjenta
   rules/             baza reguł: g1.yaml, g2.yaml, g3.yaml, g4.yaml, sources.yaml

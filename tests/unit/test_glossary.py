@@ -37,7 +37,7 @@ def test_every_rule_group_has_a_name(base):
 @pytest.mark.parametrize(
     ("param", "expected"),
     [
-        ("P1", "liczba całkowita 18–120 [lata]"),
+        ("P1", "liczba całkowita 18-120 [lata]"),
         ("P3", "liczba > 0"),
         ("P7", "liczba ≥ 0 [g/L]"),
         ("P8", "liczba > 0,07 [g/L]"),
@@ -102,7 +102,7 @@ def rule(base, rule_id):
         ("G1-01", "ESsCD 2025 cz. 1, s. 1865"),
         ("G1-02", "ESsCD 2025 cz. 1, s. 1865, 1866, 1875"),
         ("G3-09", "ESsCD 2025 cz. 1, s. 1868, 1872, 1875"),
-        ("G4-07", "ESsCD 2025 cz. 1, s. 1876–1877"),
+        ("G4-07", "ESsCD 2025 cz. 1, s. 1876-1877"),
     ],
 )
 def test_source_text_lists_pages(base, rule_id, expected):
