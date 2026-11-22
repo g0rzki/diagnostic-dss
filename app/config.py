@@ -19,8 +19,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = database_url(os.environ.get("POSTGRES_DB", "dss"))
     RULES_DIR = Path(__file__).resolve().parent / "rules"
     MIGRATIONS_DIR = Path(__file__).resolve().parent / "migrations"
+    DEMO_CASES = True
 
 
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = database_url("dss_test")
+    DEMO_CASES = False

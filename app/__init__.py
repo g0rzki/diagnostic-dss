@@ -5,12 +5,10 @@ from sqlalchemy import text
 # Import rejestruje tabele w metadanych, z których korzystają migracje.
 from app import models  # noqa: F401
 from app.config import Config
+from app.demo import insert_demo_cases
 from app.engine.rules import load_rules
-from app.extensions import db, migrate
+from app.extensions import MIGRATION_LOCK, db, migrate
 from app.routes import bp
-
-# Numer blokady doradczej PostgreSQL, wspólny dla wszystkich procesów aplikacji.
-MIGRATION_LOCK = 1
 
 
 def upgrade_database():
@@ -27,5 +25,7 @@ def create_app(config_class=Config):
     app.extensions["rule_base"] = load_rules(app.config["RULES_DIR"])
     with app.app_context():
         upgrade_database()
+        if app.config["DEMO_CASES"]:
+            insert_demo_cases(app.extensions["rule_base"])
     app.register_blueprint(bp)
     return app

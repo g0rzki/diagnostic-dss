@@ -9,10 +9,10 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import selectinload
 
-from app.engine.engine import Result
+from app.engine.engine import Result, run
 from app.engine.parameters import PARAMETERS, ParamType
 from app.engine.rules import Level, RuleBase
-from app.engine.validation import validate
+from app.engine.validation import Issue, validate
 from app.explanation import value_text
 from app.extensions import db
 from app.models import LABEL_MAX_LENGTH, Case, Consultation
@@ -23,6 +23,11 @@ LABEL_ERROR = (
     f"oznaczenie przypadku: do {LABEL_MAX_LENGTH} znaków, dozwolone litery, cyfry, spacje"
     " oraz znaki „-”, „_” i „.”, na początku litera lub cyfra"
 )
+DEMO_PREFIXES = ("PRZYKŁAD", "PRZYKLAD")
+RESERVED_ERROR = (
+    "oznaczenie przypadku: oznaczenia zaczynające się od PRZYKŁAD są zarezerwowane dla przypadków"
+    " pokazowych, wpisz własne oznaczenie"
+)
 LOCAL_TIME = ZoneInfo("Europe/Warsaw")
 DECIMAL_FIELDS = {param.id for param in PARAMETERS.values() if param.type is ParamType.DECIMAL}
 
@@ -31,8 +36,14 @@ def normalize_label(raw: str | None) -> str:
     return " ".join((raw or "").split()).upper()
 
 
+def is_demo(label: str) -> bool:
+    return normalize_label(label).startswith(DEMO_PREFIXES)
+
+
 def label_error(label: str) -> str | None:
-    return None if LABEL.fullmatch(label) else LABEL_ERROR
+    if not LABEL.fullmatch(label):
+        return LABEL_ERROR
+    return RESERVED_ERROR if is_demo(label) else None
 
 
 def _text(value: object) -> str:
@@ -91,12 +102,25 @@ def find_case(label: str) -> Case | None:
     return db.session.scalars(select(Case).where(Case.label == normalize_label(label))).first()
 
 
+SAVE_KINDS = ("nowy", "kolejna", "bez-zmian")
+
+
 @dataclass(frozen=True)
 class Saved:
     label: str
     number: int
     created: bool
     new_case: bool
+
+    @classmethod
+    def from_kind(cls, label: str, number: int, kind: str) -> "Saved":
+        return cls(label, number, created=kind != "bez-zmian", new_case=kind == "nowy")
+
+    @property
+    def kind(self) -> str:
+        if self.new_case:
+            return "nowy"
+        return "kolejna" if self.created else "bez-zmian"
 
     @property
     def message(self) -> str:
@@ -170,6 +194,10 @@ def _changes(
     return tuple(changes)
 
 
+def entered_data(values: Mapping[str, object]) -> tuple[Change, ...]:
+    return _changes(None, values)
+
+
 def timeline(case: Case, base: RuleBase) -> list[Entry]:
     entries = []
     previous = None
@@ -193,6 +221,47 @@ def timeline(case: Case, base: RuleBase) -> list[Entry]:
         )
         previous, previous_values = consultation, values
     return entries
+
+
+@dataclass(frozen=True)
+class Review:
+    values: dict[str, object]
+    warnings: tuple[Issue, ...]
+    result: Result
+    missing: tuple[str, ...]
+    current: tuple[str, ...]
+    added: tuple[str, ...]
+    removed: tuple[str, ...]
+    stored_version: str
+    current_version: str
+
+    @property
+    def same_version(self) -> bool:
+        return self.stored_version == self.current_version
+
+    @property
+    def same_result(self) -> bool:
+        return not self.added and not self.removed
+
+
+def review(consultation: Consultation, base: RuleBase) -> Review:
+    validation = validate(consultation.parameters)
+    rules = {rule.id: rule for rule in base.rules}
+    stored = tuple(consultation.fired_rules)
+    current = tuple(rule.id for rule in run(base, validation.values).fired)
+    return Review(
+        values=validation.values,
+        warnings=tuple(validation.warnings),
+        result=Result(
+            tuple(rules[code] for code in stored if code in rules), dict(consultation.derived)
+        ),
+        missing=tuple(code for code in stored if code not in rules),
+        current=current,
+        added=tuple(code for code in current if code not in stored),
+        removed=tuple(code for code in stored if code not in current),
+        stored_version=consultation.rules_version,
+        current_version=base.version,
+    )
 
 
 @dataclass(frozen=True)

@@ -43,7 +43,7 @@ def submit(client, label="", **changes):
     data = {**INTERVIEW_DEFAULTS, "P1": "30", **changes}
     if label is not None:
         data["oznaczenie"] = label
-    return client.post("/konsultacja", data=data)
+    return client.post("/konsultacja", data=data, follow_redirects=True)
 
 
 def consultations(database):
@@ -96,7 +96,8 @@ def test_edit_keeps_label_and_next_assessment_adds_consultation(client, database
     assert hidden["oznaczenie"] == "P-001"
 
     form = browser_form(client.post("/konsultacja/popraw", data=hidden).get_data(as_text=True))
-    page = client.post("/konsultacja", data={**form, **SEROLOGY}).get_data(as_text=True)
+    response = client.post("/konsultacja", data={**form, **SEROLOGY}, follow_redirects=True)
+    page = response.get_data(as_text=True)
 
     assert [item.fired_rules for item in consultations(database)] == [["G1-01"], ["G2-01"]]
     assert "Zapisano jako konsultację 2 przypadku P-001." in page
@@ -122,7 +123,10 @@ def test_labels_differing_only_in_case_and_spaces_belong_to_one_case(client, dat
 def test_label_does_not_hide_scenario_description(client, database):
     form = browser_form(client.get("/konsultacja?przyklad=bez-biopsji").get_data(as_text=True))
 
-    page = client.post("/konsultacja", data={**form, "oznaczenie": "P-001"}).get_data(as_text=True)
+    response = client.post(
+        "/konsultacja", data={**form, "oznaczenie": "P-001"}, follow_redirects=True
+    )
+    page = response.get_data(as_text=True)
 
     assert 'id="tip-scenario-G2-03"' in page
 
@@ -159,7 +163,7 @@ def test_case_page_shows_timeline_of_changes(client, database):
     assert page.count("<article") == 3
     assert "Wpisane dane" in page
     assert page.count("Zmienione dane") == 2
-    change = r"anty-TG2 IgA, wynik 1:\s*<span[^>]*>brak wyniku</span> →\s*<span[^>]*>150<"
+    change = r"wynik 1:\s*<span[^>]*>150</span>\s*<span[^>]*>\(wcześniej: brak wyniku\)<"
     assert re.search(change, page)
     assert re.search(r"Doszły</dt>\s*<dd[^>]*>\s*<a[^>]*>G2-01</a>", page)
     assert re.search(r"Zniknęły</dt>\s*<dd[^>]*>\s*<a[^>]*>G1-01</a>", page)
@@ -175,7 +179,7 @@ def test_case_page_marks_change_of_rule_base_version(client, database):
 
     page = client.get("/historia/P-001").get_data(as_text=True)
 
-    assert "Zmieniła się wersja bazy reguł: 00000000 →" in page
+    assert "Zmieniła się wersja bazy reguł z 00000000 na" in page
 
 
 def test_label_with_space_works_in_case_address(client, database):
@@ -196,7 +200,7 @@ def test_continue_opens_form_with_last_data_and_resubmitting_it_adds_nothing(cli
     last = consultations(database)[-1]
 
     form = browser_form(client.get("/konsultacja?przypadek=P-001").get_data(as_text=True))
-    page = client.post("/konsultacja", data=form).get_data(as_text=True)
+    page = client.post("/konsultacja", data=form, follow_redirects=True).get_data(as_text=True)
 
     expected = {**form_display(last.parameters), "oznaczenie": "P-001"}
     assert (form["P7"], form["P8"]) == ("1,5", "0,7")

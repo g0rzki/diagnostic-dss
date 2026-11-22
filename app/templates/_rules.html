@@ -1,0 +1,62 @@
+{% from "_macros.html" import code_badge, code_link, with_code_links %}
+{% set level_borders = {
+  "rekomendacja": "border-l-brand",
+  "ostrzeżenie": "border-l-amber-500",
+  "informacja": "border-l-slate-400",
+} %}
+{% for level, title, description in levels %}
+  {% set rules = result.at_level(level) %}
+  {% if rules %}
+    <section class="mt-8">
+      <h2 class="text-lg font-semibold text-brand">{{ title }}</h2>
+      <p class="text-sm text-slate-500">{{ level.value | capitalize }} {{ description }}.</p>
+      <ul class="mt-3 space-y-3">
+        {% for rule in rules %}
+          <li class="rounded-lg border border-l-4 border-slate-200 {{ level_borders[level.value] }} bg-white p-4 shadow-sm">
+            <div class="flex items-center gap-2">
+              {{ code_badge(rule.id, rule_tips[rule.id]) }}
+              <p class="font-medium">{{ rule.name[:1] | upper }}{{ rule.name[1:] }}</p>
+            </div>
+            <p class="mt-2">{{ rule.conclusion }}</p>
+            {% set why = explanations[rule.id] %}
+            <details class="mt-3 border-t border-slate-100 pt-2">
+              <summary class="cursor-pointer select-none text-sm font-medium text-brand hover:underline">Uzasadnienie</summary>
+              <dl class="mt-2 grid gap-x-4 gap-y-2 text-sm sm:grid-cols-[11rem_1fr]">
+                <dt class="text-slate-500">Warunek reguły</dt>
+                <dd>{{ with_code_links(why.condition_parts) }}</dd>
+                <dt class="text-slate-500">Wartości w warunku</dt>
+                <dd>
+                  <ul class="space-y-1">
+                    {% for fact in why.facts %}
+                      <li>{{ code_link(fact.id) }} {{ fact.label }}: <span class="font-medium">{{ fact.text }}</span></li>
+                    {% endfor %}
+                  </ul>
+                </dd>
+                {% if why.inputs %}
+                  <dt class="text-slate-500">Wyliczone z danych</dt>
+                  <dd>
+                    <ul class="grid gap-x-4 gap-y-1 sm:grid-cols-2">
+                      {% for fact in why.inputs %}
+                        <li>{{ code_link(fact.id) }} {{ fact.label }}: <span class="font-medium">{{ fact.text }}</span></li>
+                      {% endfor %}
+                    </ul>
+                  </dd>
+                {% endif %}
+                <dt class="text-slate-500">Źródło</dt>
+                <dd>{{ why.source }}<span class="block text-slate-500">{{ why.evidence }}</span></dd>
+                <dt class="text-slate-500">{{ ptge_name }}</dt>
+                <dd>{{ why.ptge }}</dd>
+              </dl>
+              <a href="{{ url_for('main.glossary') }}#{{ rule.id }}" target="_blank" rel="noopener"
+                 class="mt-3 inline-block text-sm text-brand hover:underline">Reguła {{ rule.id }} w słowniku oznaczeń</a>
+            </details>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endfor %}
+
+{% if not result.fired %}
+  <p class="mt-8 rounded border border-slate-200 bg-white p-4">Żadna reguła nie ma zastosowania do wpisanych danych.</p>
+{% endif %}

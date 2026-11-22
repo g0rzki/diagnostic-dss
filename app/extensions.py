@@ -9,5 +9,9 @@ NAMING_CONVENTION = {
     "ix": "ix_%(table_name)s_%(column_0_name)s",
 }
 
+# Numer blokady doradczej PostgreSQL na czas zmian bazy przy starcie aplikacji (migracja,
+# przypadki pokazowe), wspólny dla wszystkich procesów aplikacji.
+MIGRATION_LOCK = 1
+
 db = SQLAlchemy(metadata=MetaData(naming_convention=NAMING_CONVENTION))
 migrate = Migrate(render_as_batch=False)

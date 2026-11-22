@@ -1,6 +1,7 @@
-from flask import Blueprint, abort, current_app, render_template, request
+from flask import Blueprint, abort, current_app, redirect, render_template, request, url_for
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.datastructures import MultiDict
 
 from app.engine.engine import run
 from app.engine.parameters import PARAMETERS
@@ -20,12 +21,17 @@ from app.glossary import (
 )
 from app.history import (
     LABEL_FIELD,
+    SAVE_KINDS,
+    Saved,
     consultation_count,
+    entered_data,
     find_case,
     form_display,
+    is_demo,
     label_error,
     local_time,
     normalize_label,
+    review,
     save,
     summaries,
     timeline,
@@ -58,6 +64,13 @@ def all_rule_names():
 def split_form(form):
     data = {name: value for name, value in form.items() if name != LABEL_FIELD}
     return form.get(LABEL_FIELD, ""), data
+
+
+def stored_form(case, consultation):
+    form = form_display(consultation.parameters)
+    if not is_demo(case.label):
+        form[LABEL_FIELD] = case.label
+    return form
 
 
 @bp.get("/")
@@ -97,8 +110,7 @@ def consultation_form():
         case = find_case(case_label)
         if case is None or not case.consultations:
             abort(404)
-        last = form_display(case.consultations[-1].parameters)
-        return render_form({**last, LABEL_FIELD: case.label})
+        return render_form(stored_form(case, case.consultations[-1]))
     slug = request.args.get("przyklad")
     if slug is None:
         return render_form(INTERVIEW_DEFAULTS)
@@ -119,10 +131,14 @@ def consultation_result():
         return render_form(request.form, errors, 422)
     base = rule_base()
     result = run(base, validation.values)
-    saved = save(label, validation.values, result, base.version) if label else None
-    submitted = request.form.copy()
-    if LABEL_FIELD in submitted:
-        submitted[LABEL_FIELD] = label
+    if label:
+        saved = save(label, validation.values, result, base.version)
+        return redirect(
+            url_for(
+                "main.saved_consultation", label=saved.label, number=saved.number, zapis=saved.kind
+            ),
+            303,
+        )
     return render_template(
         "result.html",
         result=result,
@@ -134,9 +150,8 @@ def consultation_result():
         warnings=validation.warnings,
         rule_tips=all_rule_tips(),
         rule_names=all_rule_names(),
-        submitted=submitted,
+        submitted=request.form,
         scenario=matching_scenario(data),
-        saved=saved,
     )
 
 
@@ -147,7 +162,15 @@ def consultation_edit():
 
 @bp.get("/historia")
 def history():
-    return render_template("history.html", cases=summaries(rule_base()), rule_tips=all_rule_tips())
+    cases = summaries(rule_base())
+    return render_template(
+        "history.html",
+        demo_cases=sorted(
+            (case for case in cases if is_demo(case.label)), key=lambda case: case.label
+        ),
+        cases=[case for case in cases if not is_demo(case.label)],
+        rule_tips=all_rule_tips(),
+    )
 
 
 @bp.get("/historia/<label>")
@@ -159,8 +182,43 @@ def case_history(label):
         "case.html",
         case=case,
         entries=timeline(case, rule_base()),
+        demo=is_demo(case.label),
         rule_tips=all_rule_tips(),
         rule_names=all_rule_names(),
+    )
+
+
+@bp.get("/historia/<label>/<int:number>")
+def saved_consultation(label, number):
+    case = find_case(label)
+    if case is None or not 1 <= number <= len(case.consultations):
+        abort(404)
+    consultation = case.consultations[number - 1]
+    base = rule_base()
+    record = review(consultation, base)
+    kind = request.args.get("zapis")
+    form = stored_form(case, consultation)
+    return render_template(
+        "saved.html",
+        case=case,
+        number=number,
+        consultation=consultation,
+        record=record,
+        entered=entered_data(record.values),
+        result=record.result,
+        explanations={
+            rule.id: explain(base, rule, record.values, record.result.derived)
+            for rule in record.result.fired
+        },
+        ptge_name=base.sources["ptge"].name,
+        levels=LEVEL_TITLES,
+        warnings=record.warnings,
+        rule_tips=all_rule_tips(),
+        rule_names=all_rule_names(),
+        submitted=MultiDict(form),
+        scenario=matching_scenario(form_display(consultation.parameters)),
+        saved=Saved.from_kind(case.label, number, kind) if kind in SAVE_KINDS else None,
+        demo=is_demo(case.label),
     )
 
 

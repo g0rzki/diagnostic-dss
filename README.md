@@ -124,6 +124,7 @@ Kierunek reguły pochodzi z ESsCD. Wyjątkiem są reguły oznaczone w słowniku 
 - Moduł reguł eksperckich przetwarzający dane wejściowe
 - Generowanie rekomendacji diagnostycznych wraz z wyjaśnieniem, które reguły zadziałały i z jakiego źródła pochodzą
 - Reguły zapisane jako dane (pliki YAML) oddzielone od kodu i sprawdzane przy starcie aplikacji
+- Historia konsultacji w PostgreSQL: przebieg diagnostyki przypadku z wersją bazy reguł i sprawdzeniem, czy zapisany wynik zgadza się z bieżącymi regułami
 - Komponent uczenia maszynowego jako uzupełnienie podejścia regułowego (regresja logistyczna, drzewa decyzyjne)
 - Prezentacja wyników w przejrzystej formie webowej
 
@@ -139,6 +140,9 @@ Po uruchomieniu (sekcja [Uruchomienie](#uruchomienie)) aplikacja działa lokalni
 |---|---|
 | `/` | strona startowa |
 | `/konsultacja` | formularz konsultacji |
+| `/historia` | lista przypadków: przypadki pokazowe i przypadki zapisane w formularzu |
+| `/historia/<oznaczenie>` | przebieg przypadku: oś kolejnych konsultacji ze zmianami danych i reguł |
+| `/historia/<oznaczenie>/<numer>` | zapisana konsultacja z uzasadnieniem i sprawdzeniem zgodności z bieżącymi regułami |
 | `/slownik` | słownik oznaczeń: dane wejściowe, wartości wyliczane, reguły ze stronami źródeł |
 
 Po wypełnieniu formularza i kliknięciu **Oceń** strona wyniku pokazuje komunikaty reguł podzielone na rekomendacje, ostrzeżenia i informacje. Pod każdym komunikatem można rozwinąć uzasadnienie: warunek reguły, wartości wpisane i wyliczone, które go spełniły, miejsce w ESsCD ze stroną i oceną GRADE oraz zgodność z PTG-E. **Popraw dane** wraca do formularza z wpisanymi wartościami, więc jedną ścieżkę diagnostyczną można przejść etapami. Każde pole i każda reguła mają kod (P1, G2-01 itd.) w wyróżnionej plakietce: najechanie na kod pokazuje opis, a kliknięcie otwiera słownik na tym kodzie.
@@ -163,6 +167,27 @@ Przykładowe dane (pola nie wymienione zostają z wartościami domyślnymi):
 | jak wyżej, wiek 45 | G2-07: ścieżka bez biopsji nie ma zastosowania, oraz G3-03: protokół pobrania wycinków |
 | wiek 30, spożycie glutenu ograniczone, prowokacja zakończona: nie | G4-04: HLA przed prowokacją, ostrzeżenie G1-02, informacja G4-07 |
 
+### Historia konsultacji
+
+Na początku formularza jest pole **Oznaczenie przypadku** (opcjonalne, np. `P-001`; bez imienia, nazwiska i numeru PESEL). Gdy jest wypełnione, każda poprawna ocena zapisuje się jako kolejna konsultacja tego przypadku, a przeglądarka przechodzi na stronę zapisanej konsultacji. Bez oznaczenia system działa jak wcześniej i niczego nie zapisuje. Ponowne wysłanie tych samych danych przy tej samej wersji bazy reguł nie tworzy nowego wpisu.
+
+Strona przypadku pokazuje oś konsultacji: dane zmienione względem poprzedniej konsultacji, rekomendacje oraz reguły, które doszły i zniknęły. **Kontynuuj diagnostykę** otwiera formularz z danymi ostatniej konsultacji, więc kolejne wyniki badań dopisuje się bez przepisywania danych. Zapisana konsultacja (odnośnik **Szczegóły** na osi) pokazuje dane wejściowe i wynik z dnia zapisu z uzasadnieniem. Ramka zgodności porównuje wersję bazy reguł z dnia zapisu z bieżącą i ocenia zapisane dane ponownie bieżącymi regułami: wynik zgodny, zmieniona baza reguł z tym samym wynikiem albo lista reguł, które zadziałałyby teraz i które nie zadziałałyby już.
+
+W wersji demonstracyjnej historia jest wspólna dla wszystkich odwiedzających. Daty są pokazywane w czasie polskim.
+
+### Przypadki pokazowe
+
+Przy starcie aplikacji do bazy trafiają cztery przypadki pokazowe, jeśli ich jeszcze nie ma. W kodzie (`app/demo.py`) zapisane są tylko dane kolejnych wizyt, a reguły, które zadziałały, liczy silnik przy wstawianiu, więc przypadki odpowiadają bazie reguł z chwili wstawienia.
+
+| Przypadek | Przebieg | Konsultacje |
+|---|---|---|
+| PRZYKŁAD-1 | ścieżka bez biopsji, rekomendacje kolejno: G1-01, G2-01, G2-02, G2-03 | 4 |
+| PRZYKŁAD-2 | ujemna druga próbka, biopsja, Marsh 3, rekomendacje kolejno: G2-01, G2-02, G2-05, G3-05 | 4 |
+| PRZYKŁAD-3 | całkowity niedobór IgA, dodatnie testy IgG, skierowanie na biopsję, rekomendacje kolejno: G1-01, G1-03, G4-01 | 3 |
+| PRZYKŁAD-4 | ograniczony gluten, HLA, prowokacja, biopsja, rekomendacje kolejno: G4-04, G4-06, G4-08, G3-05 | 4 |
+
+Przypadki pokazowe są tylko do odczytu. Oznaczenia zaczynające się od `PRZYKŁAD` (także `PRZYKLAD`) są zarezerwowane, więc formularz nie zapisze konsultacji z takim oznaczeniem. Na stronie przypadku pokazowego zamiast **Kontynuuj diagnostykę** jest **Otwórz dane w formularzu**: formularz otwiera się bez oznaczenia, więc dane można zmieniać i oceniać bez zapisu.
+
 ---
 
 ## Architektura systemu
@@ -171,9 +196,9 @@ System zbudowany jest w podejściu warstwowym:
 
 - **Warstwa prezentacji**: interfejs webowy (szablony Jinja2, Tailwind CSS)
 - **Warstwa logiki biznesowej**: aplikacja Flask, silnik reguł eksperckich, integracja modeli ML
-- **Warstwa danych**: pliki reguł YAML (baza wiedzy), PostgreSQL (historia konsultacji)
+- **Warstwa danych**: pliki reguł YAML (baza wiedzy), PostgreSQL (historia konsultacji, schemat tworzony migracjami)
 
-Przepływ konsultacji: formularz → walidacja danych → wartości wyliczane → ocena reguł → strona wyniku.
+Przebieg konsultacji: formularz, walidacja danych, wartości wyliczane, ocena reguł, zapis konsultacji (gdy podano oznaczenie przypadku) i strona wyniku.
 
 Środowisko uruchomieniowe składa się z trzech kontenerów Docker:
 
@@ -190,7 +215,7 @@ Przepływ konsultacji: formularz → walidacja danych → wartości wyliczane �
 | Obszar | Technologia |
 |---|---|
 | Backend | Python 3.12, Flask, gunicorn |
-| Baza danych | PostgreSQL 16, SQLAlchemy, psycopg |
+| Baza danych | PostgreSQL 16, SQLAlchemy, Flask-Migrate (Alembic), psycopg |
 | Reguły | YAML (PyYAML) |
 | Frontend | HTML (Jinja2), Tailwind CSS |
 | ML / analiza danych | Scikit-learn, Pandas, NumPy |
@@ -209,7 +234,11 @@ app/
     derived.py       wartości wyliczane D1–D9
     rules.py         wczytywanie i sprawdzanie plików reguł
     engine.py        ocena reguł dla danych pacjenta
-  rules/             baza reguł: g1.yaml…g4.yaml, sources.yaml
+  rules/             baza reguł: g1.yaml, g2.yaml, g3.yaml, g4.yaml, sources.yaml
+  migrations/        migracje schematu bazy danych (Alembic), uruchamiane przy starcie
+  models.py          tabele bazy danych: przypadki i konsultacje
+  history.py         zapis konsultacji, oś przypadku, sprawdzenie zgodności z bieżącymi regułami
+  demo.py            przypadki pokazowe wstawiane przy starcie
   forms.py           układ formularza, wartości domyślne, podpowiedzi
   scenarios.py       przykładowe scenariusze wypełniające formularz
   glossary.py        treść słownika oznaczeń i podpowiedzi przy kodach
@@ -248,6 +277,8 @@ Aplikacja jest dostępna pod adresem http://localhost:8000.
 
 Pierwsze uruchomienie trwa dłużej, bo Docker pobiera obrazy i buduje kontenery (obraz `frontend` pobiera program Tailwind CSS).
 
+Przy każdym starcie aplikacja tworzy lub aktualizuje schemat bazy danych (migracje) i wstawia brakujące przypadki pokazowe. Kontener `backend` startuje dopiero po gotowości bazy. Bez działającej bazy danych aplikacja nie wystartuje, a utrata połączenia w trakcie działania jest widoczna w `/health` (kod 503).
+
 ### Sprawdzenie działania
 
 ```bash
@@ -279,9 +310,34 @@ Opis zmiennych znajduje się w pliku `.env.example`.
 
 ---
 
+## Baza danych
+
+Historia konsultacji jest zapisana w dwóch tabelach: `cases` (przypadek: oznaczenie i data utworzenia) i `consultations` (konsultacja: dane wejściowe i wartości wyliczane w formacie JSONB, kody reguł, które zadziałały, oraz wersja bazy reguł). Wersja bazy reguł to skrót SHA-256 plików `app/rules/*.yaml`, ten sam co wynik polecenia w katalogu `app/rules`:
+
+```bash
+sha256sum *.yaml | sha256sum
+```
+
+Na macOS: `shasum -a 256 *.yaml | shasum -a 256`.
+
+Czyszczenie historii (na przykład przed udostępnieniem wersji demonstracyjnej). Po restarcie backendu przypadki pokazowe wstawiają się ponownie:
+
+```bash
+docker compose exec db psql -U dss -d dss -c "TRUNCATE consultations, cases RESTART IDENTITY"
+docker compose restart backend
+```
+
+Zmiana schematu: po zmianie modeli w `app/models.py` nową migrację tworzy polecenie poniżej (z aktywnym środowiskiem `.venv` i działającym kontenerem bazy), a po przejrzeniu pliku w `app/migrations/versions/` migracja wykona się przy najbliższym starcie aplikacji:
+
+```bash
+flask db migrate -m "opis zmiany" --rev-id 0002
+```
+
+---
+
 ## Pliki reguł
 
-Reguły są zapisane w plikach `app/rules/g1.yaml`…`g4.yaml`, po jednym na grupę. Każda reguła zawiera:
+Reguły są zapisane w plikach od `app/rules/g1.yaml` do `app/rules/g4.yaml`, po jednym na grupę. Każda reguła zawiera:
 
 - identyfikator, nazwę, grupę i poziom (rekomendacja, ostrzeżenie, informacja),
 - warunek zapisany na danych wejściowych i wartościach wyliczanych, w dwóch postaciach: tekstowej (`condition_text`, wyświetlanej lekarzowi) i maszynowej (`condition`),
@@ -299,7 +355,7 @@ condition:
     - [D1_2, '≠', ujemny]
 ```
 
-Pliki reguł są wczytywane i sprawdzane przy starcie aplikacji: nieznane pola, wartości spoza listy, niezgodność `uses` z warunkiem i inne błędy zatrzymują start z listą wszystkich problemów. Po zmianie plików reguł trzeba zrestartować backend:
+Pliki reguł są wczytywane i sprawdzane przy starcie aplikacji: nieznane pola, wartości spoza listy, niezgodność `uses` z warunkiem i inne błędy zatrzymują start z listą wszystkich problemów. Zmiana plików reguł zmienia wersję bazy reguł, a zapisane wcześniej konsultacje pokazują, czy ich wynik zgadza się z nowymi regułami. Po zmianie plików reguł trzeba zrestartować backend:
 
 ```bash
 docker compose restart backend
@@ -329,7 +385,7 @@ Testy jednostkowe nie wymagają Dockera:
 pytest tests/unit
 ```
 
-Testy integracyjne korzystają z osobnej bazy `dss_test`, więc wymagają działającego kontenera bazy danych:
+Testy integracyjne korzystają z osobnej bazy `dss_test` (bez przypadków pokazowych), więc wymagają działającego kontenera bazy danych:
 
 ```bash
 docker compose up -d db
@@ -377,7 +433,7 @@ Projekt jest w trakcie realizacji (praca inżynierska 2026/2027).
 - [x] Silnik reguł eksperckich, walidacja danych i formularz konsultacji
 - [x] Strona wyniku i słownik oznaczeń
 - [x] Uzasadnienie reguły przy wyniku (warunek, wpisane i wyliczone dane, źródło, ocena GRADE)
-- [ ] Historia konsultacji w bazie danych
+- [x] Historia konsultacji w bazie danych: przebieg przypadku, zapisany wynik ze sprawdzeniem zgodności z bieżącymi regułami, przypadki pokazowe
 - [ ] Komponent uczenia maszynowego i łączenie wyników
 - [ ] Ewaluacja systemu
 
